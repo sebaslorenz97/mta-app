@@ -1,0 +1,35 @@
+<form [formGroup]="formGroup" (ngSubmit)="saveFormGroup($event)">
+  <mat-card class="form">
+    <mat-card-content class="container">
+
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field>
+            <mat-label>Role:</mat-label>
+            <mat-select formControlName="roleName">
+              <mat-option value="ADMIN">Administrador</mat-option>
+              <mat-option value="EMPLOYEE">Empleado</mat-option>
+            </mat-select>
+            @if (this.roleName!.invalid) {
+              <mat-error>{{errorMessage1}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field>
+            <mat-label>Usuario</mat-label>
+            <input matInput formControlName="roleUser">
+            @if (this.roleUser!.invalid) {
+              <mat-error>{{errorMessage2}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-dark">Asignar Role</button>
+
+    </mat-card-content>
+  </mat-card>
+
+</form>

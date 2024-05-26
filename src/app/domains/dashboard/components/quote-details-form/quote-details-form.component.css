@@ -1,0 +1,30 @@
+.mat-mdc-form-field {
+  --mdc-filled-text-field-caret-color: #000000;
+  --mdc-filled-text-field-focus-active-indicator-color: #676767;
+  --mdc-filled-text-field-focus-label-text-color: #000000;
+}
+
+.mdc-data-table__cell, .mdc-data-table__header-cell {
+  padding: 0 10px 0 10px;
+}
+
+table{
+  table-layout: fixed;
+  width: 715px;
+}
+
+.mec {
+  width: 100px;
+}
+
+.labour-repair {
+  width: 365px;
+}
+
+.amount {
+  width: 150px;
+}
+
+.delete {
+  width: 100px;
+}

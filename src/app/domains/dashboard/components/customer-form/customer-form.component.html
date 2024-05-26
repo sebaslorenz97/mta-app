@@ -1,0 +1,102 @@
+<form  [formGroup]="formGroup" (ngSubmit)="saveFormGroup($event)">
+  <mat-card class="form">
+    <mat-card-content class="container">
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field>
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="customerName">
+            @if (this.customerName!.invalid) {
+              <mat-error>{{errorMessage1}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+            <mat-checkbox formControlName="customerParticularEmpresa" class="check-color" class="example-margin" (click)="enableCustomerReference()">¿Empresa?</mat-checkbox>
+        </div>
+        <div class="col-9">
+          <mat-form-field class="colores">
+            <mat-label>Referencia</mat-label>
+            <input matInput formControlName="customerReference">
+            @if (this.customerReference!.invalid) {
+              <mat-error>{{errorMessage2}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-7">
+          <mat-form-field>
+            <mat-label>RFC:</mat-label>
+            <input matInput formControlName="customerRfc">
+            @if (this.customerRfc!.invalid) {
+              <mat-error>{{errorMessage3}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-5">
+          <mat-form-field>
+            <mat-label>CP:</mat-label>
+            <input matInput formControlName="customerCp">
+            @if (this.customerCp!.invalid) {
+              <mat-error>{{errorMessage4}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field>
+            <mat-label>Email:</mat-label>
+            <input matInput formControlName="customerEmail">
+            @if (this.customerEmail!.invalid) {
+              <mat-error>{{errorMessage5}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-form-field>
+            <mat-label>Telefono Celular:</mat-label>
+            <input matInput formControlName="customerPhoneNumber">
+            @if (this.customerPhoneNumber!.invalid) {
+              <mat-error>{{errorMessage6}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field>
+            <mat-label>Estado:</mat-label>
+            <mat-select formControlName="stateNameFk">
+              <mat-option value="Queretaro">Queretaro</mat-option>
+              <mat-option value="Ciudad De Mexico">Ciudad de Mexico</mat-option>
+            </mat-select>
+            @if (this.stateNameFk!.invalid) {
+              <mat-error>{{errorMessage7}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field>
+            <mat-label>Municipio:</mat-label>
+            <mat-select formControlName="municipalityNameFk">
+              <mat-option value="Queretaro">Queretaro</mat-option>
+              <mat-option value="El Marques">El Marques</mat-option>
+              <mat-option value="Corregidora">Corregidora</mat-option>
+              <mat-option value="Huimilpan">Huimilpan</mat-option>
+            </mat-select>
+            @if (this.municipalityNameFk!.invalid) {
+              <mat-error>{{errorMessage8}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <button [disabled]="formGroup.invalid" type="submit" class="btn btn-dark">Crear Cliente</button>
+    </mat-card-content>
+  </mat-card>
+</form>

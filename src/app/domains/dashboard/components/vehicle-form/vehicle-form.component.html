@@ -1,0 +1,77 @@
+<form [formGroup]="formGroup" (ngSubmit)="saveFormGroup($event)">
+  <mat-card class="form">
+    <mat-card-content class="container">
+      <div class="row">
+        <div class="col-7">
+          <mat-form-field>
+            <mat-label>ID Cliente</mat-label>
+            <input matInput formControlName="customerIdFk">
+            @if (this.customerIdFk!.invalid) {
+              <mat-error>{{errorMessage4}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-5">
+          <mat-form-field>
+            <mat-label>Placa</mat-label>
+            <input matInput formControlName="vehiclePlate">
+            @if (this.vehiclePlate!.invalid) {
+              <mat-error>{{errorMessage1}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field class="colores">
+            <mat-label>Kilometraje</mat-label>
+            <input matInput formControlName="vehicleMillage" type="number">
+            @if (this.vehicleMillage!.invalid) {
+              <mat-error>{{errorMessage3}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field>
+            <mat-label>Color</mat-label>
+            <input matInput formControlName="vehicleColor" type="color">
+            @if (this.vehicleColor!.invalid) {
+              <mat-error>{{errorMessage2}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-5">
+          <mat-form-field class="colores">
+            <mat-label>Marca</mat-label>
+            <input matInput formControlName="vehicleLineNameFk">
+            @if (this.vehicleLineNameFk!.invalid) {
+              <mat-error>{{errorMessage5}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-5">
+          <mat-form-field>
+            <mat-label>Modelo</mat-label>
+            <input matInput formControlName="vehicleModelNameFk">
+            @if (this.vehicleModelNameFk!.invalid) {
+              <mat-error>{{errorMessage6}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field>
+            <mat-label>Año</mat-label>
+            <input matInput formControlName="vehicleYearValueFk">
+            @if (this.vehicleYearValueFk!.invalid) {
+              <mat-error>{{errorMessage7}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <button [disabled]="formGroup.invalid" type="submit" class="btn btn-dark">Asignar Auto al Cliente</button>
+    </mat-card-content>
+  </mat-card>
+
+</form>
