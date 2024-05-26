@@ -1,0 +1,30 @@
+.col-10{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-rendered-0{
+  width: 500px;
+  height: 550px;
+}
+
+.form-rendered-1{
+  width: 500px;
+  height: 110.4px;
+}
+
+.form-rendered-2{
+  width: 370px;
+  height: 370px;
+}
+
+.form-rendered-22{
+  width: 880px;
+  height: 700px;
+}
+
+.form-rendered-3{
+  width: 600px;
+  height: 310px;
+}

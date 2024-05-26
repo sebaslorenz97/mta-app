@@ -20,6 +20,7 @@ import {merge, mergeWith, Observable} from 'rxjs';
 @Component({
   selector: 'app-quote-form',
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   imports: [MatSlideToggleModule, MatDatepickerModule, MatInputModule, MatFormFieldModule, MatCardModule, MatSelectModule, MatCheckboxModule, ReactiveFormsModule],
   templateUrl: './quote-form.component.html',
   styleUrl: './quote-form.component.css'

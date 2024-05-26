@@ -1,0 +1,58 @@
+<div class="container-fluid" style="margin: 0; padding: 0;">
+
+  <div class="row bg-dark text-white">
+    <div class="col-10 start">
+      <h1>
+        Bienvenido {{ customer().customerName }} a Mi Taller Automotriz
+      </h1>
+    </div>
+    <div class="col-2">
+      <img src="../../../../../assets/images/logo_3.PNG" alt="MDN" width="257.19px" height="48px"/>
+    </div>
+  </div>
+
+  <div class="row vh-100">
+
+    <div class="col-2 bg-dark">
+      <app-dashboard-navbar></app-dashboard-navbar>
+    </div>
+
+    <div *ngIf="renderOption() != 2 && renderOption() != 4; else elseBlock" class="col-10 bg-secondary">
+        <div class="form-rendered-0" *ngIf="renderOption() == 0">
+          <app-customer-form></app-customer-form>
+        </div>
+        <div class="form-rendered-1" *ngIf="renderOption() == 1">
+          <app-search-form></app-search-form>
+        </div>
+        <div class="form-rendered-3" *ngIf="renderOption() == 3">
+          <app-vehicle-form></app-vehicle-form>
+        </div>
+    </div>
+
+    <ng-template #elseBlock>
+      <div class="col-3 bg-secondary" *ngIf="renderOption() == 2">
+        <div class="cortainer-fluid form-rendered-2" style="margin-left: 8; margin-top: 8;">
+          <app-quote-form></app-quote-form>
+        </div>
+      </div>
+      <div class="col-7 bg-secondary" *ngIf="renderOption() == 2">
+        <div class="cortainer-fluid form-rendered-22">
+          <app-quote-details-form></app-quote-details-form>
+        </div>
+      </div>
+
+      <div class="col-5 bg-secondary" *ngIf="renderOption() == 4">
+        <div class="cortainer-fluid" style="margin-left: 8; margin-top: 8;">
+          <app-user-form></app-user-form>
+        </div>
+      </div>
+      <div class="col-5 bg-secondary" *ngIf="renderOption() == 4">
+        <div class="cortainer-fluid">
+          <app-user-roles-form></app-user-roles-form>
+        </div>
+      </div>
+    </ng-template>
+
+  </div>
+
+</div>

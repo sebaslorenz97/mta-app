@@ -1,0 +1,111 @@
+<div class="accordion .accordion-flush" id="accordionExample">
+  <div class="accordion-item bg-dark border-0">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button bg-dark text-white text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        USUARIOS Y ROLES
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body px-0 py-0">
+        <ul class="nav bg-dark flex-column">
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToUserAndRoles()">Crear Usuario & Asignar Roles</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchUserAndRoles()">Consultar Usuario</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchUserAndRoles()">Actualizar Usuario</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToDeleteUserAndRoles()">Eliminar Usuario</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item bg-dark border-0">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        CLIENTES
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+      <div class="accordion-body px-0 py-0">
+        <ul class="nav bg-dark flex-column">
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToCustomer()">Crear Cliente</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchCustomer()">Consultar Cliente</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchCustomer()">Actualizar Cliente</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToDeleteCustomer()">Eliminar Cliente</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item bg-dark border-0">
+    <h2 class="accordion-header" id="headingFour">
+      <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+        VEHICULOS
+      </button>
+    </h2>
+    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <ul class="nav bg-dark flex-column">
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToVehicle()">Crear Vehiculo</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchVehicle()">Consultar Vehiculo</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchVehicle()">Actualizar Vehiculo</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToDeleteVehicle()">Eliminar Vehiculo</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item bg-dark border-0">
+    <h2 class="accordion-header" id="headingThree">
+      <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        COTIZACIONES
+      </button>
+    </h2>
+    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <ul class="nav bg-dark flex-column">
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToQuote()">Crear Cotizacion</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchQuoteByCustomerName()">Consultar Cotizacion (Cliente)</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchQuoteByPlate()">Consultar Cotizacion  (Placa)</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchQuoteByCustomerName()">Actualizar Cotizacion (Cliente)</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchQuoteByPlate()">Actualizar Cotizacion  (Placa)</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToDeleteQuoteByCustomerName()">Eliminar Cotizacion (Cliente)</a>
+          </li>
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionToDeleteQuoteByPlate()">Eliminar Cotizacion  (Placa)</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

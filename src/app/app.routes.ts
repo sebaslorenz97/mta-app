@@ -3,6 +3,8 @@ import { HomeComponent } from '../app/domains/home/pages/home/home.component'
 import { AboutComponent } from '../app/domains/home/pages/about/about.component'
 import { ContactComponent } from '../app/domains/home/pages/contact/contact.component'
 
+import { DashboardComponent } from '../app/domains/dashboard/pages/dashboard/dashboard.component'
+
 export const routes: Routes = [
   {
     path: '',
@@ -15,5 +17,10 @@ export const routes: Routes = [
   {
     path: 'contact',
     component: ContactComponent
+  },
+  {
+    path: 'dashboard-users',
+    //canActivate: [ authGuard ],
+    component: DashboardComponent
   }
 ];
