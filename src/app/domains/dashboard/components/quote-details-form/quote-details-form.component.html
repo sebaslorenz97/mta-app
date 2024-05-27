@@ -9,7 +9,7 @@
           <mat-error>{{errorMessage1}}</mat-error>
         }
       </mat-form-field>
-      <button [disabled]="quoteDetailIdFk.invalid" (click)="addDetail()" type="button" class="btn btn-dark">Agregar detalle</button>
+      <button [disabled]="quoteDetailIdFk.invalid" (click)="addDetail()" type="button" class="btn btn-primary">Agregar detalle</button>
 
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container formArrayName="details">
@@ -52,7 +52,7 @@
         <ng-container matColumnDef="delete">
           <th mat-header-cell *matHeaderCellDef class="delete"> - </th>
           <td mat-cell *matCellDef="let element; index as i" [formGroup]="element" class="delete">
-            <button (click)="deleteDetail(i)" type="button" class="btn btn-dark">Eliminar</button>
+            <button (click)="deleteDetail(i)" type="button" class="btn btn-primary">Eliminar</button>
           </td>
         </ng-container>
 
@@ -61,7 +61,7 @@
       </ng-container>
       </table>
 
-      <button type="submit" class="btn btn-dark">Guardar Detalles</button>
+      <button type="submit" class="btn btn-primary">Guardar Detalles</button>
 
     </mat-card-content>
   </mat-card>

@@ -1,17 +1,17 @@
 .mat-mdc-form-field {
-  --mdc-filled-text-field-caret-color: #000000;
-  --mdc-filled-text-field-focus-active-indicator-color: #676767;
-  --mdc-filled-text-field-focus-label-text-color: #000000;
+  --mdc-filled-text-field-caret-color: #1356dd;
+  --mdc-filled-text-field-focus-active-indicator-color: #3a9ae4;
+  --mdc-filled-text-field-focus-label-text-color: #1356dd;
 }
 
 .mat-mdc-checkbox{
-  --mdc-checkbox-selected-focus-icon-color: #959ca5;
-  --mdc-checkbox-selected-focus-state-layer-color: #959ca5;
-  --mdc-checkbox-selected-hover-icon-color: #6d6f6e;
-  --mdc-checkbox-selected-icon-color: #6f6d6d;
+  --mdc-checkbox-selected-focus-icon-color: #6f9dd8;
+  --mdc-checkbox-selected-focus-state-layer-color: #6f9dd8;
+  --mdc-checkbox-selected-hover-icon-color: #275cbd;
+  --mdc-checkbox-selected-icon-color: #275cbd;
 
-  --mdc-checkbox-selected-pressed-icon-color: #3c3e3f;
-  --mdc-checkbox-selected-pressed-state-layer-color: #3c3e3f;
+  --mdc-checkbox-selected-pressed-icon-color: #1356dd;
+  --mdc-checkbox-selected-pressed-state-layer-color: #1356dd;
 }
 
 .mat-mdc-form-field{
