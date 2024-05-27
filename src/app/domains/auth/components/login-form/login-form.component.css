@@ -1,0 +1,19 @@
+.mat-mdc-form-field {
+  --mdc-filled-text-field-caret-color: #000000;
+  --mdc-filled-text-field-focus-active-indicator-color: #676767;
+  --mdc-filled-text-field-focus-label-text-color: #000000;
+}
+
+.mat-mdc-form-field{
+  width: 98%;
+  margin: 1;
+}
+
+.btn{
+  width: 98%;
+}
+
+.form{
+  width: 100%;
+  height: 100%;
+}
