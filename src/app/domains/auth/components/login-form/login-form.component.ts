@@ -95,7 +95,7 @@ export class LoginFormComponent {
       .subscribe({
         next: response => {
           this.status = 'succed'
-          this.router.navigate(['/dashboard-users'])
+          this.router.navigate(['/dashboard'])
         },
         error: error => {
           this.status = 'failed'

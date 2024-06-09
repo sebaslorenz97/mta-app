@@ -9,16 +9,10 @@
       <div class="accordion-body px-0 py-0">
         <ul class="nav bg-primary flex-column">
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToUserAndRoles()">Crear Usuario & Asignar Roles</a>
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionCreateUserRoles()" routerLink="/dashboard/user-and-roles">Crear Usuario & Asignar Roles</a>
           </li>
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchUserAndRoles()">Consultar Usuario</a>
-          </li>
-          <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchUserAndRoles()">Actualizar Usuario</a>
-          </li>
-          <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToDeleteUserAndRoles()">Eliminar Usuario</a>
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionSearchUserByName()" routerLink="/dashboard/user-and-roles">Consultar Usuario por Usuario</a>
           </li>
         </ul>
       </div>
@@ -34,16 +28,10 @@
       <div class="accordion-body px-0 py-0">
         <ul class="nav bg-primary flex-column">
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToCustomer()">Crear Cliente</a>
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionCreateCustomer()" routerLink="/dashboard/customer">Crear Cliente</a>
           </li>
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchCustomer()">Consultar Cliente</a>
-          </li>
-          <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchCustomer()">Actualizar Cliente</a>
-          </li>
-          <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToDeleteCustomer()">Eliminar Cliente</a>
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionSearchCustomerByName()" routerLink="/dashboard/customer">Consultar Cliente por Nombre</a>
           </li>
         </ul>
       </div>
@@ -59,16 +47,13 @@
       <div class="accordion-body">
         <ul class="nav bg-primary flex-column">
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToVehicle()">Crear Vehiculo</a>
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionCreateVehicle()" routerLink="/dashboard/vehicle">Crear Vehiculo</a>
           </li>
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchVehicle()">Consultar Vehiculo</a>
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionSearchVehicleByPlate()" routerLink="/dashboard/vehicle">Consultar Vehiculo por placa</a>
           </li>
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchVehicle()">Actualizar Vehiculo</a>
-          </li>
-          <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToDeleteVehicle()">Eliminar Vehiculo</a>
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionSearchVehiclesByCustomer()" routerLink="/dashboard/vehicle">Consultar Vehiculos de un Cliente</a>
           </li>
         </ul>
       </div>
@@ -84,25 +69,13 @@
       <div class="accordion-body">
         <ul class="nav bg-primary flex-column">
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToQuote()">Crear Cotizacion</a>
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionCreateQuoteDetails()" routerLink="/dashboard/quote-and-details">Crear Cotizacion y detalles</a>
           </li>
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchQuoteByCustomerName()">Consultar Cotizacion (Cliente)</a>
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionSearchQuoteById()" routerLink="/dashboard/quote-and-details">Consultar Cotizacion por ID</a>
           </li>
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchQuoteByPlate()">Consultar Cotizacion  (Placa)</a>
-          </li>
-          <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchQuoteByCustomerName()">Actualizar Cotizacion (Cliente)</a>
-          </li>
-          <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToSearchQuoteByPlate()">Actualizar Cotizacion  (Placa)</a>
-          </li>
-          <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToDeleteQuoteByCustomerName()">Eliminar Cotizacion (Cliente)</a>
-          </li>
-          <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionToDeleteQuoteByPlate()">Eliminar Cotizacion  (Placa)</a>
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionSearchQuotesByVehicle()" routerLink="/dashboard/quote-and-details">Consultar Cotizaciones de un Auto</a>
           </li>
         </ul>
       </div>

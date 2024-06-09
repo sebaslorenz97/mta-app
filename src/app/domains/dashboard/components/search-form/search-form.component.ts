@@ -19,6 +19,5 @@ export class SearchFormComponent {
   private generalServiceService = inject(GeneralServiceService);
 
   model = this.generalServiceService.model;
-  action = this.generalServiceService.action;
 
 }

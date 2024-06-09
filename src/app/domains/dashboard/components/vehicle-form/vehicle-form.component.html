@@ -5,8 +5,8 @@
         <div class="col-7">
           <mat-form-field>
             <mat-label>ID Cliente</mat-label>
-            <input matInput formControlName="customerIdFk">
-            @if (this.customerIdFk!.invalid) {
+            <input matInput formControlName="customerNameFk">
+            @if (this.customerNameFk!.invalid) {
               <mat-error>{{errorMessage4}}</mat-error>
             }
           </mat-form-field>
@@ -42,10 +42,15 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-5">
-          <mat-form-field class="colores">
-            <mat-label>Marca</mat-label>
-            <input matInput formControlName="vehicleLineNameFk">
+        <div class="col-4">
+          <mat-form-field>
+            <mat-label>Marca:</mat-label>
+            <mat-select formControlName="vehicleLineNameFk">
+              <mat-option value="Nissan">Nissan</mat-option>
+              <mat-option value="Volkswagen">Volkswagen</mat-option>
+              <mat-option value="Chevrolet">Chevrolet</mat-option>
+              <mat-option value="Audi">Audi</mat-option>
+            </mat-select>
             @if (this.vehicleLineNameFk!.invalid) {
               <mat-error>{{errorMessage5}}</mat-error>
             }
@@ -53,17 +58,27 @@
         </div>
         <div class="col-5">
           <mat-form-field>
-            <mat-label>Modelo</mat-label>
-            <input matInput formControlName="vehicleModelNameFk">
+            <mat-label>Modelo:</mat-label>
+            <mat-select formControlName="vehicleModelNameFk">
+              <mat-option value="Versa Exclusive">Versa Exclusive</mat-option>
+              <mat-option value="X-Trail Advance">X-Trail Advance</mat-option>
+              <mat-option value="Altima Advance">Altima Advance</mat-option>
+              <mat-option value="Jetta">Jetta</mat-option>
+            </mat-select>
             @if (this.vehicleModelNameFk!.invalid) {
               <mat-error>{{errorMessage6}}</mat-error>
             }
           </mat-form-field>
         </div>
-        <div class="col-2">
+        <div class="col-3">
           <mat-form-field>
-            <mat-label>Año</mat-label>
-            <input matInput formControlName="vehicleYearValueFk">
+            <mat-label>Año:</mat-label>
+            <mat-select formControlName="vehicleYearValueFk">
+              <mat-option value="2021">2021</mat-option>
+              <mat-option value="2022">2022</mat-option>
+              <mat-option value="2023">2023</mat-option>
+              <mat-option value="2024">2024</mat-option>
+            </mat-select>
             @if (this.vehicleYearValueFk!.invalid) {
               <mat-error>{{errorMessage7}}</mat-error>
             }
@@ -71,6 +86,7 @@
         </div>
       </div>
       <button [disabled]="formGroup.invalid" type="submit" class="btn btn-primary">Asignar Auto al Cliente</button>
+      <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
     </mat-card-content>
   </mat-card>
 

@@ -1,5 +1,11 @@
 //Other Imports
-import { Component, SimpleChanges} from '@angular/core';
+import { Component, SimpleChanges, ViewChild, inject} from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+//Local imports
+import { CreateCustomerDTO } from '../../../shared/models/model';
+import { CustomerService } from '../../../shared/services/customer.service';
+import { AlertModalComponent } from '../../../shared/alert-modal/alert-modal/alert-modal.component'
 
 //Imports for Angular Material
 import {MatCardModule} from '@angular/material/card';
@@ -9,7 +15,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
 //Imports for Reactive Forms
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormControlStatus, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormControlStatus, FormControl, FormGroupDirective } from '@angular/forms';
 
 //Imports for RXJS
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -19,7 +25,7 @@ import {merge, mergeWith, Observable} from 'rxjs';
 @Component({
   selector: 'app-customer-form',
   standalone: true,
-  imports: [MatSelectModule, MatInputModule, MatFormFieldModule, MatCardModule, MatCheckboxModule, ReactiveFormsModule],
+  imports: [MatSelectModule, MatInputModule, MatFormFieldModule, MatCardModule, MatCheckboxModule, ReactiveFormsModule, AlertModalComponent, CommonModule],
   templateUrl: './customer-form.component.html',
   styleUrl: './customer-form.component.css'
 })
@@ -37,6 +43,10 @@ export class CustomerFormComponent {
   errorMessage7 = 'Este campo es requerido';
   errorMessage8 = 'Este campo es requerido';
   errorMessage9 = 'Este campo es requerido';
+  alertMessage: string | null = null;
+
+  @ViewChild(FormGroupDirective)
+  private formDir!: FormGroupDirective;
 
   constructor(private formBuilder: FormBuilder){
     this.buildForm();
@@ -79,10 +89,78 @@ export class CustomerFormComponent {
       this.customerReference!.setValue('');
     }
   }
-  saveFormGroup(event: Event){
-    console.log(this.formGroup.value)
+
+  private cleanFormGroup(){
+    this.formDir.resetForm();
+    /*this.formGroup.setValue({
+      customerName: '',
+      customerParticularEmpresa: false,
+      customerReference: '',
+      customerRfc: '',
+      customerCp: '',
+      customerEmail: '',
+      customerPhoneNumber: '',
+      stateNameFk: '',
+      municipalityNameFk: ''
+    })
+    this.formGroup.controls['customerName'].reset();
+    this.formGroup.controls['customerName'].setErrors(null)
+    this.formGroup.controls['customerParticularEmpresa'].reset();
+    this.formGroup.controls['customerParticularEmpresa'].setErrors(null);
+    this.formGroup.controls['customerReference'].reset();
+    this.formGroup.controls['customerReference'].setErrors(null);
+    this.formGroup.controls['customerRfc'].reset();
+    this.formGroup.controls['customerRfc'].setErrors(null);
+    this.formGroup.controls['customerCp'].reset();
+    this.formGroup.controls['customerCp'].setErrors(null);
+    this.formGroup.controls['customerEmail'].reset();
+    this.formGroup.controls['customerEmail'].setErrors(null);
+    this.formGroup.controls['customerPhoneNumber'].reset();
+    this.formGroup.controls['customerPhoneNumber'].setErrors(null);
+    this.formGroup.controls['stateNameFk'].reset();
+    this.formGroup.controls['stateNameFk'].setErrors(null);
+    this.formGroup.controls['municipalityNameFk'].reset();
+    this.formGroup.controls['municipalityNameFk'].setErrors(null);*/
   }
 
+  //METHODS FOR SERVICE
+  private customerService = inject(CustomerService);
+
+  saveFormGroup(event: Event){
+
+    console.log('ENTRO AL SAVE GROUP')
+    console.log(this.formGroup.value)
+    const customer: CreateCustomerDTO = this.formGroup.value;
+    console.log(customer)
+    if(!this.customerParticularEmpresa?.touched){
+      //this.customerParticularEmpresa!.setValue(false);
+      customer.customerParticularEmpresa = false;
+    }
+    if(!this.customerReference?.touched){
+      customer.customerReference = 'N/A';
+    }
+
+    this.customerService.saveCustomer(customer)
+      .subscribe/*(data => {
+        console.log(data)
+        this.alertMessage = data.message;
+      })*/
+      ({
+        next: response => {
+          console.log(response.cb)
+          this.alertMessage = `${response.message}. Customer ID: ${response.cb.customerId}, Customer Name: ${response.cb.customerName}, Customer Phone: ${response.cb.customerPhoneNumber}, Customer Mail: ${response.cb.customerEmail}`;
+          this.cleanFormGroup();
+        },
+        error: error => {
+          this.alertMessage = error.error.message;
+        }
+      })
+  }
+
+  //OTHER METHODS
+
+
+  //METHODS FOR VALIDATIONS
   updateErrorMessage() {
     //UPDATE MESSAGE FOR CUSTOMERNAME
     if (this.customerName!.hasError('required')) {

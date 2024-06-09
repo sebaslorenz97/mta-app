@@ -6,9 +6,9 @@
         <div class="col-12">
           <mat-form-field>
             <mat-label>Crea un usuario</mat-label>
-            <input matInput formControlName="userName">
+            <input matInput formControlName="userPk">
             <mat-hint align="start">Min 8, Max 15, Al menos una letra mayus, minus, un digito y no espacios en blanco.</mat-hint>
-            @if (this.userName!.invalid) {
+            @if (this.userPk!.invalid) {
               <mat-error>{{errorMessage1}}</mat-error>
             }
           </mat-form-field>
@@ -45,6 +45,17 @@
       </div>
       <div class="row">
         <div class="col-12">
+          <mat-form-field>
+            <mat-label>Nombre empleado</mat-label>
+            <input matInput formControlName="userName">
+            @if (this.userName!.invalid) {
+              <mat-error>{{errorMessage5}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
           <mat-form-field class="example-full-width">
             <mat-label>Correo</mat-label>
             <input type="email" matInput formControlName="userEmail">
@@ -54,9 +65,27 @@
           </mat-form-field>
         </div>
       </div>
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field>
+            <mat-label>Puesto</mat-label>
+            <input matInput formControlName="userPosition">
+            @if (this.userPosition!.invalid) {
+              <mat-error>{{errorMessage6}}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <mat-checkbox formControlName="userLocked" class="check-color" class="example-margin">Bloquear</mat-checkbox>
+        </div>
+        <div class="col-6">
+          <mat-checkbox formControlName="userDisabled" class="check-color" class="example-margin">Deshabilitar</mat-checkbox>
+        </div>
+      </div>
       <button [disabled]="formGroup.invalid" type="submit" class="btn btn-primary">Crear Usuario</button>
-
+      <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
     </mat-card-content>
   </mat-card>
-
 </form>

@@ -1,0 +1,11 @@
+.dropdown-menu{
+  --bs-dropdown-link-hover-bg: #4b89e6
+}
+
+.col-10{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+

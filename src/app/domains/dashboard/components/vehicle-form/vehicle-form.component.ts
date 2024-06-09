@@ -1,12 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+//Local imports
+import { CreateVehicleDTO } from '../../../shared/models/model';
+import { VehicleService } from '../../../shared/services/vehicle.service';
+import { AlertModalComponent } from '../../../shared/alert-modal/alert-modal/alert-modal.component'
 
 //Imports for Angular Material
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCardModule} from '@angular/material/card';
+import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 
 //Imports for Reactive Forms
-import {ReactiveFormsModule, FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormGroupDirective} from '@angular/forms';
 
 //Imports for RXJS
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -16,7 +23,7 @@ import {merge, mergeWith, Observable} from 'rxjs';
 @Component({
   selector: 'app-vehicle-form',
   standalone: true,
-  imports: [MatCardModule, MatInputModule, MatFormFieldModule, ReactiveFormsModule],
+  imports: [MatCardModule, MatInputModule, MatFormFieldModule, MatSelectModule, ReactiveFormsModule, AlertModalComponent, CommonModule],
   templateUrl: './vehicle-form.component.html',
   styleUrl: './vehicle-form.component.css'
 })
@@ -32,6 +39,10 @@ export class VehicleFormComponent {
   errorMessage5 = 'Este campo es requerido';
   errorMessage6 = 'Este campo es requerido';
   errorMessage7 = 'Campo requerido';
+  alertMessage: string | null = null;
+
+  @ViewChild(FormGroupDirective)
+  private formDir!: FormGroupDirective;
 
   constructor(private formBuilder: FormBuilder) {
     this.buildForm()
@@ -49,15 +60,36 @@ export class VehicleFormComponent {
       vehiclePlate: ['', [Validators.required, Validators.pattern(/^([A-Z]{3}\-[0-9]{3}\-[A-Z]{1})|([A-Z]{3}\-[0-9]{2}\-[0-9]{2})$/)]],
       vehicleColor: ['', [Validators.required]],
       vehicleMillage: ['', [Validators.required, Validators.pattern(/^[0-9]{0,6}$/)]],
-      customerIdFk: ['', [Validators.required]],
+      customerNameFk: ['', [Validators.required]],
       vehicleLineNameFk: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
       vehicleModelNameFk: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
       vehicleYearValueFk: ['', [Validators.required, Validators.pattern(/^[0-9]{4}$/)]]
     })
   }
 
+  private cleanFormGroup(){
+    this.formDir.resetForm();
+  }
+
+  //METHODS FOR SERVICE
+  private vehicleService = inject(VehicleService);
+
   saveFormGroup(event: Event){
     console.log(this.formGroup.value)
+    const vehicle: CreateVehicleDTO = this.formGroup.value;
+    console.log(vehicle)
+    this.vehicleService.saveVehicle(vehicle)
+      .subscribe({
+        next: response => {
+          console.log(response.cb)
+          this.alertMessage = `${response.message}. Vehiculo ID: ${response.vb.vehicleId}, Placa: ${response.vb.vehiclePlate}, Color: ${response.vb.vehicleColor}, Marca: ${response.vb.vehicleLineNameFk}, Modelo: ${response.vb.vehicleModelNameFk}, Dueño: ${response.vb.customerNameFk}`;
+          this.cleanFormGroup();
+        },
+        error: error => {
+          this.alertMessage = error.error.message;
+        }
+      })
+
   }
 
   //METHODS FOR VALIDATIONS
@@ -82,7 +114,7 @@ export class VehicleFormComponent {
     }
 
     //UPDATE MESSAGE FOR CUSTOMER ID FK
-    if (this.customerIdFk!.hasError('required')) {
+    if (this.customerNameFk!.hasError('required')) {
       this.errorMessage4 = 'Este campo es requerido';
     }
 
@@ -121,8 +153,8 @@ export class VehicleFormComponent {
     return this.formGroup.get('vehicleMillage');
   }
 
-  get customerIdFk(){
-    return this.formGroup.get('customerIdFk');
+  get customerNameFk(){
+    return this.formGroup.get('customerNameFk');
   }
 
   get vehicleLineNameFk(){

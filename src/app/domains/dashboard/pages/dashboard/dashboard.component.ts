@@ -1,6 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'
 
+import { ProfileFormComponent } from '../../../dashboard/components/profile-form/profile-form.component'
 import { DashboardNavbarComponent } from '../../../shared/components/dashboard-navbar/dashboard-navbar.component';
 import { SearchFormComponent } from '../../../dashboard/components/search-form/search-form.component';
 import { UserFormComponent } from '../../../dashboard/components/user-form/user-form.component'
@@ -10,14 +12,14 @@ import { QuoteFormComponent } from '../../../dashboard/components/quote-form/quo
 import { QuoteDetailsFormComponent } from '../../../dashboard/components/quote-details-form/quote-details-form.component'
 import { VehicleFormComponent } from '../../../dashboard/components/vehicle-form/vehicle-form.component'
 
-import { Customer } from '../../../shared/models/customer.model';
+import { CreateCustomerDTO } from '../../../shared/models/model';
 import { GeneralServiceService } from '../../../shared/services/general-service.service';
-
+import { AuthService } from '../../../shared/services/auth.service'
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, DashboardNavbarComponent, UserFormComponent, UserRolesFormComponent, CustomerFormComponent, QuoteFormComponent, SearchFormComponent, QuoteDetailsFormComponent, VehicleFormComponent],
+  imports: [CommonModule, ProfileFormComponent, DashboardNavbarComponent, UserFormComponent, UserRolesFormComponent, CustomerFormComponent, QuoteFormComponent, SearchFormComponent, QuoteDetailsFormComponent, VehicleFormComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -26,10 +28,15 @@ import { GeneralServiceService } from '../../../shared/services/general-service.
 export class DashboardComponent {
 
   private generalServiceService = inject(GeneralServiceService);
+  private authService = inject(AuthService);
 
-  renderOption = this.generalServiceService.renderOption;
+  constructor(private router: Router) {
 
-  customer = signal<Customer>({
+  }
+
+  //renderOption = this.generalServiceService.renderOption;
+
+  customer = signal<CreateCustomerDTO>({
     stateNameFk: "Queretaro",
     municipalityNameFk: "El Marques",
     customerName: "Fernando Ortega",
@@ -41,9 +48,14 @@ export class DashboardComponent {
     customerPhoneNumber: "4425337687"
   });
 
-  receiveCustomerInfoHandler(customer: Customer){
+  receiveCustomerInfoHandler(customer: CreateCustomerDTO){
     console.log('Info recibida desde padre');
     //customer();
+  }
+
+  logout(){
+    this.authService.logout();
+    //this.router.navigate(['/login'])
   }
 
 }

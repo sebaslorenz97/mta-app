@@ -7,7 +7,7 @@ import { TokenService } from '../../shared/services/token.service'
 export const redirectGuard: CanActivateFn = (route, state) => {
   const token: string | undefined = inject(TokenService).getToken();
   if (token) {
-    inject(Router).navigate(['/dashboard-users']);
+    inject(Router).navigate(['/dashboard/profile']);
     return false;
   }
   return true;

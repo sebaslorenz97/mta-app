@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+//Local imports
+import { CreateQuoteDTO } from '../../../shared/models/model';
+import { QuoteService } from '../../../shared/services/quote.service';
+import { AlertModalComponent } from '../../../shared/alert-modal/alert-modal/alert-modal.component'
 
 //Imports for Angular Material
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -11,7 +17,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {provideNativeDateAdapter} from '@angular/material/core';
 
 //Imports for Reactive Forms
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
 
 //Imports for RXJS
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -21,7 +27,7 @@ import {merge, mergeWith, Observable} from 'rxjs';
   selector: 'app-quote-form',
   standalone: true,
   providers: [provideNativeDateAdapter()],
-  imports: [MatSlideToggleModule, MatDatepickerModule, MatInputModule, MatFormFieldModule, MatCardModule, MatSelectModule, MatCheckboxModule, ReactiveFormsModule],
+  imports: [MatSlideToggleModule, MatDatepickerModule, MatInputModule, MatFormFieldModule, MatCardModule, MatSelectModule, MatCheckboxModule, ReactiveFormsModule, AlertModalComponent, CommonModule],
   templateUrl: './quote-form.component.html',
   styleUrl: './quote-form.component.css'
 })
@@ -32,6 +38,10 @@ export class QuoteFormComponent {
   errorMessage2 = 'Campo requerido';
   errorMessage3 = 'Campo requerido';
   errorMessage4 = 'Este campo es requerido';
+  alertMessage: string | null = null;
+
+  @ViewChild(FormGroupDirective)
+  private formDir!: FormGroupDirective;
 
   constructor(private formBuilder: FormBuilder) {
     this.buildForm()
@@ -43,7 +53,7 @@ export class QuoteFormComponent {
       .subscribe(() => this.updateErrorMessage());
   }
 
-  //FORMGROUP
+  //METHODS FOR FORMGROUP
   private buildForm(){
     this.formGroup = this.formBuilder.group({
       quoteDeadline: ['', [Validators.required]],
@@ -56,11 +66,54 @@ export class QuoteFormComponent {
     })
   }
 
+  private cleanFormGroup(){
+    this.formDir.resetForm();
+  }
+
+  //METHODS FOR SERVICE
+  private quoteService = inject(QuoteService);
+
   saveFormGroup(event: Event){
+
     console.log(this.formGroup.value)
+    const quote: CreateQuoteDTO = this.formGroup.value;
+    const orderDate = new Date();
+    quote.quoteOrderDate = this.formatDate(orderDate);
+    const deadLineDate = new Date(quote.quoteDeadline);
+    quote.quoteDeadline = this.formatDate(deadLineDate);
+    console.log(quote)
+    if(!this.quotePaymentStatus?.touched){
+      quote.quotePaymentStatus = false;
+    }
+    if(!this.quoteRequireInvoice?.touched){
+      quote.quoteRequireInvoice = false;
+    }
+    if(!this.quotePaymentMethod?.touched){
+      quote.quotePaymentMethod = false;
+    }
+
+    this.quoteService.saveQuote(quote)
+      .subscribe({
+        next: response => {
+          console.log(response)
+          this.alertMessage = `${response.message}. Cotizacion ID: ${response.qb.quoteId}, Placas del Vehiculo: ${response.qb.vehicleNameFk}, Fecha estimada de entrega: ${response.qb.quoteDeadline}`;
+          this.cleanFormGroup();
+        },
+        error: error => {
+          this.alertMessage = error.error.message;
+        }
+      })
+
   }
 
   //OTHER METHODS
+  formatDate(date: Date){
+    const datePart1 = date.toLocaleDateString('en-CA');
+    const datePart2 = date.toLocaleString().split(',')[1].trim();
+    return datePart1 + ' ' + datePart2
+  }
+
+  //METHODS FOR VALIDATIONS
   updateErrorMessage() {
     //UPDATE MESSAGE FOR VEHICLE PLATE
     if (this.vehiclePlate!.hasError('required')) {

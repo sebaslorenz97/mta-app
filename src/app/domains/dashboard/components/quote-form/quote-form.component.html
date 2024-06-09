@@ -1,5 +1,5 @@
 <form [formGroup]="formGroup" (ngSubmit)="saveFormGroup($event)">
-  <mat-card class="form" >
+  <mat-card class="form">
     <mat-card-content class="container">
       <div class="row">
         <div class="col-12">
@@ -29,9 +29,9 @@
           <mat-form-field>
             <mat-label>Estatus del auto:</mat-label>
             <mat-select formControlName="quoteStatusVehicle">
-              <mat-option value="one">Pendiente</mat-option>
-              <mat-option value="two">En proceso</mat-option>
-              <mat-option value="two">Terminado</mat-option>
+              <mat-option value="Pendiente">Pendiente</mat-option>
+              <mat-option value="En proceso">En proceso</mat-option>
+              <mat-option value="Terminado">Terminado</mat-option>
             </mat-select>
             @if (this.quoteStatusVehicle!.invalid) {
               <mat-error>{{errorMessage3}}</mat-error>
@@ -53,8 +53,8 @@
       <div class="row">
         <div class="col">
           <mat-form-field floatLabel="always">
-            <mat-label>Amount</mat-label>
-            <input matInput type="number" class="example-right-align" placeholder="0" formControlName="quoteAdvancePayment">
+            <mat-label>Adelanto:</mat-label>
+            <input matInput type="number" class="example-right-align" formControlName="quoteAdvancePayment">
             <span matTextPrefix>$&nbsp;</span>
             <span matTextSuffix>.00</span>
             @if (this.quoteAdvancePayment!.invalid) {
@@ -64,6 +64,7 @@
         </div>
       </div>
       <button [disabled]="formGroup.invalid" type="submit" class="btn btn-primary">Crear Cotizacion</button>
+      <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
     </mat-card-content>
   </mat-card>
 </form>

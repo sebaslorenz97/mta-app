@@ -1,0 +1,72 @@
+<div class="container-fluid" style="position: absolute; margin: 0;">
+
+  <div class="row bg-primary text-white">
+    <div class="col-11">
+      <h1>
+        Bienvenido a Mi Taller Automotriz {{ renderOption() }}
+      </h1>
+    </div>
+    <div class="col-1 dropdown">
+      <img
+        style="position: absolute; right: 0;"
+        class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+        src="../../../../../assets/images/profile.png"
+        alt="login-icon" width="56px" height="56px"
+      />
+      <ul class="dropdown-menu bg-primary">
+        <li><a class="dropdown-item text-white" routerLink="/dashboard/profile">Mi Perfil</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-white" (click)="logout()">Cerrar Sesion <img
+          src="../../../../../assets/images/logout.png"
+          alt="logout-icon" width="25px" height="25px"
+        /></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row" style="height: 100vh;">
+
+    <div class="col-2 bg-primary">
+      <app-dashboard-navbar></app-dashboard-navbar>
+    </div>
+    <div class="col-10 bg-light" style="padding-top: 20px; padding-bottom: 20px; padding-left: 20px; padding-right: 20px;">
+      <router-outlet></router-outlet>
+    </div>
+    <!--<div *ngIf="renderOption() != 2 && renderOption() != 4; else elseBlock" class="col-10 bg-light">
+        <div class="form-rendered-0" *ngIf="renderOption() == 0">
+          <app-customer-form></app-customer-form>
+        </div>
+        <div class="form-rendered-1" *ngIf="renderOption() == 1">
+          <app-search-form></app-search-form>
+        </div>
+        <div class="form-rendered-3" *ngIf="renderOption() == 3">
+          <app-vehicle-form></app-vehicle-form>
+        </div>
+    </div>
+
+    <ng-template #elseBlock>
+      <div class="col-3 bg-light" *ngIf="renderOption() == 2">
+        <div class="cortainer-fluid form-rendered-2" style="margin-left: 8; margin-top: 8;">
+          <app-quote-form></app-quote-form>
+        </div>
+      </div>
+      <div class="col-7 bg-light" *ngIf="renderOption() == 2">
+        <div class="cortainer-fluid form-rendered-22">
+          <app-quote-details-form></app-quote-details-form>
+        </div>
+      </div>
+
+      <div class="col-5 bg-light" *ngIf="renderOption() == 4">
+        <div class="cortainer-fluid" style="margin-left: 8; margin-top: 8;">
+          <app-user-form></app-user-form>
+        </div>
+      </div>
+      <div class="col-5 bg-light" *ngIf="renderOption() == 4">
+        <div class="cortainer-fluid">
+          <app-user-roles-form></app-user-roles-form>
+        </div>
+      </div>
+    </ng-template>-->
+  </div>
+
+</div>

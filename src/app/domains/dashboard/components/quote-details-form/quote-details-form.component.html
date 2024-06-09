@@ -12,7 +12,7 @@
       <button [disabled]="quoteDetailIdFk.invalid" (click)="addDetail()" type="button" class="btn btn-primary">Agregar detalle</button>
 
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-        <ng-container formArrayName="details">
+        <ng-container formArrayName="lqdb">
         <!--- Note that these columns can be defined in any order.
               The actual rendered columns are set as a property on the row definition" -->
 
@@ -41,7 +41,7 @@
           <th mat-header-cell *matHeaderCellDef class="amount"> Importe </th>
           <td mat-cell *matCellDef="let element" [formGroup]="element" class="amount">
             <mat-form-field floatLabel="always" style="width: 100%;">
-              <input matInput type="number" class="example-right-align" placeholder="0" formControlName="quoteDetailAmount">
+              <input matInput type="number" class="example-right-align" formControlName="quoteDetailAmount">
               <span matTextPrefix>$&nbsp;</span>
               <span matTextSuffix>.00</span>
             </mat-form-field>
@@ -61,8 +61,8 @@
       </ng-container>
       </table>
 
-      <button type="submit" class="btn btn-primary">Guardar Detalles</button>
-
+      <button [disabled]="formGroup.invalid" type="submit" class="btn btn-primary">Guardar Detalles</button>
+      <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
     </mat-card-content>
   </mat-card>
-  </form>
+</form>

@@ -1,4 +1,4 @@
-<form  [formGroup]="formGroup" (ngSubmit)="saveFormGroup($event)">
+<form [formGroup]="formGroup" (ngSubmit)="saveFormGroup($event)">
   <mat-card class="form">
     <mat-card-content class="container">
       <div class="row">
@@ -97,6 +97,7 @@
         </div>
       </div>
       <button [disabled]="formGroup.invalid" type="submit" class="btn btn-primary">Crear Cliente</button>
+      <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
     </mat-card-content>
   </mat-card>
 </form>
