@@ -1,10 +1,14 @@
 //Other Imports
-import { Component, SimpleChanges, ViewChild, inject} from '@angular/core';
+import { Component, ViewChild, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 //Local imports
+//Components
 import { CreateCustomerDTO } from '../../../shared/models/model';
+//Services
 import { CustomerService } from '../../../shared/services/customer.service';
+import { GeneralServiceService } from '../../../shared/services/general-service.service'
+//Others
 import { AlertModalComponent } from '../../../shared/alert-modal/alert-modal/alert-modal.component'
 
 //Imports for Angular Material
@@ -15,11 +19,11 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
 //Imports for Reactive Forms
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormControlStatus, FormControl, FormGroupDirective } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormControl, FormGroupDirective } from '@angular/forms';
 
 //Imports for RXJS
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {merge, mergeWith, Observable} from 'rxjs';
+import {merge} from 'rxjs';
 
 
 @Component({
@@ -33,6 +37,11 @@ import {merge, mergeWith, Observable} from 'rxjs';
 
 export class CustomerFormComponent {
 
+  //OTHER VARIABLES
+  private generalServiceService = inject(GeneralServiceService);
+  renderOption = this.generalServiceService.renderOption;
+
+  //VARIABLES FOR CREATE A CUSTOMER
   formGroup!: FormGroup;
   errorMessage1 = 'Este campo es requerido';
   errorMessage2 = 'Este campo es requerido';
@@ -47,6 +56,10 @@ export class CustomerFormComponent {
 
   @ViewChild(FormGroupDirective)
   private formDir!: FormGroupDirective;
+
+  //VARIABLES FOR SEARCH A CUSTOMER BY NAME
+  customerNameDos = new FormControl('', [Validators.required]);
+  errorMessage10 = 'Este campo es requerido';
 
   constructor(private formBuilder: FormBuilder){
     this.buildForm();
@@ -66,7 +79,7 @@ export class CustomerFormComponent {
       .subscribe(() => this.updateErrorMessage());*/
   }
 
-  //METHODS FOR FORMGROUP
+  //METHODS FOR CREATE A CUSTOMER'S FORMGROUP
   private buildForm(){
     this.formGroup = this.formBuilder.group({
       customerName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
@@ -92,48 +105,17 @@ export class CustomerFormComponent {
 
   private cleanFormGroup(){
     this.formDir.resetForm();
-    /*this.formGroup.setValue({
-      customerName: '',
-      customerParticularEmpresa: false,
-      customerReference: '',
-      customerRfc: '',
-      customerCp: '',
-      customerEmail: '',
-      customerPhoneNumber: '',
-      stateNameFk: '',
-      municipalityNameFk: ''
-    })
-    this.formGroup.controls['customerName'].reset();
-    this.formGroup.controls['customerName'].setErrors(null)
-    this.formGroup.controls['customerParticularEmpresa'].reset();
-    this.formGroup.controls['customerParticularEmpresa'].setErrors(null);
-    this.formGroup.controls['customerReference'].reset();
-    this.formGroup.controls['customerReference'].setErrors(null);
-    this.formGroup.controls['customerRfc'].reset();
-    this.formGroup.controls['customerRfc'].setErrors(null);
-    this.formGroup.controls['customerCp'].reset();
-    this.formGroup.controls['customerCp'].setErrors(null);
-    this.formGroup.controls['customerEmail'].reset();
-    this.formGroup.controls['customerEmail'].setErrors(null);
-    this.formGroup.controls['customerPhoneNumber'].reset();
-    this.formGroup.controls['customerPhoneNumber'].setErrors(null);
-    this.formGroup.controls['stateNameFk'].reset();
-    this.formGroup.controls['stateNameFk'].setErrors(null);
-    this.formGroup.controls['municipalityNameFk'].reset();
-    this.formGroup.controls['municipalityNameFk'].setErrors(null);*/
   }
 
-  //METHODS FOR SERVICE
+  //SERVICE METHOD FOR CREATE A CUSTOMER
   private customerService = inject(CustomerService);
 
   saveFormGroup(event: Event){
-
     console.log('ENTRO AL SAVE GROUP')
     console.log(this.formGroup.value)
     const customer: CreateCustomerDTO = this.formGroup.value;
     console.log(customer)
     if(!this.customerParticularEmpresa?.touched){
-      //this.customerParticularEmpresa!.setValue(false);
       customer.customerParticularEmpresa = false;
     }
     if(!this.customerReference?.touched){
@@ -141,10 +123,7 @@ export class CustomerFormComponent {
     }
 
     this.customerService.saveCustomer(customer)
-      .subscribe/*(data => {
-        console.log(data)
-        this.alertMessage = data.message;
-      })*/
+      .subscribe
       ({
         next: response => {
           console.log(response.cb)
@@ -157,10 +136,13 @@ export class CustomerFormComponent {
       })
   }
 
-  //OTHER METHODS
+  //SERVICE METHOD FOR SEARCH A CUSTOMER BY NAME
+  searchCustomerByName(){
+    console.log(this.customerNameDos)
+  }
 
 
-  //METHODS FOR VALIDATIONS
+  //VALIDATION METHOD FOR CREATE A CUSTOMER
   updateErrorMessage() {
     //UPDATE MESSAGE FOR CUSTOMERNAME
     if (this.customerName!.hasError('required')) {
@@ -219,7 +201,7 @@ export class CustomerFormComponent {
     }
   }
 
-  //GETTERS
+  //GETTERS FOR CREATE A CUSTOMER
   get customerName(){
     return this.formGroup.get('customerName');
   }

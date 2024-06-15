@@ -1,9 +1,14 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'
 
 //Local imports
+//Components
 import { CreateVehicleDTO } from '../../../shared/models/model';
+//Services
 import { VehicleService } from '../../../shared/services/vehicle.service';
+import { GeneralServiceService } from '../../../shared/services/general-service.service'
+//Others
 import { AlertModalComponent } from '../../../shared/alert-modal/alert-modal/alert-modal.component'
 
 //Imports for Angular Material
@@ -13,11 +18,11 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 
 //Imports for Reactive Forms
-import {ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormGroupDirective} from '@angular/forms';
+import {ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormGroupDirective, FormControl} from '@angular/forms';
 
 //Imports for RXJS
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {merge, mergeWith, Observable} from 'rxjs';
+import {merge, finalize} from 'rxjs';
 
 
 @Component({
@@ -31,6 +36,11 @@ import {merge, mergeWith, Observable} from 'rxjs';
 
 export class VehicleFormComponent {
 
+  //OTHER VARIABLES
+  private generalServiceService = inject(GeneralServiceService);
+  renderOption = this.generalServiceService.renderOption;
+
+  //VARIABLES FOR CREATE A VEHICLE
   formGroup!: FormGroup;
   errorMessage1 = 'Este campo es requerido';
   errorMessage2 = 'Este campo es requerido';
@@ -44,7 +54,14 @@ export class VehicleFormComponent {
   @ViewChild(FormGroupDirective)
   private formDir!: FormGroupDirective;
 
-  constructor(private formBuilder: FormBuilder) {
+  //VARIABLES FOR SEARCH A VEHICLE BY PLATE
+  vehiclePlateDos = new FormControl('', [Validators.required]);
+  errorMessage8 = 'Este campo es requerido';
+
+  //VARIABLES FOR SEARCH CUSTOMER'S VEHICLES
+  customerName = new FormControl('', [Validators.required]);
+
+  constructor(private formBuilder: FormBuilder, private router: Router) {
     this.buildForm()
 
     let observable2 = this.formGroup.statusChanges;
@@ -54,7 +71,7 @@ export class VehicleFormComponent {
       .subscribe(() => this.updateErrorMessage());
   }
 
-  //METHODS FOR FORMGROUP
+  //METHODS FOR CREATE A VEHICLE'S FORMGROUP
   private buildForm(){
     this.formGroup = this.formBuilder.group({
       vehiclePlate: ['', [Validators.required, Validators.pattern(/^([A-Z]{3}\-[0-9]{3}\-[A-Z]{1})|([A-Z]{3}\-[0-9]{2}\-[0-9]{2})$/)]],
@@ -71,7 +88,7 @@ export class VehicleFormComponent {
     this.formDir.resetForm();
   }
 
-  //METHODS FOR SERVICE
+  //SERVICE METHOD FOR CREATE A VEHICLE
   private vehicleService = inject(VehicleService);
 
   saveFormGroup(event: Event){
@@ -89,10 +106,36 @@ export class VehicleFormComponent {
           this.alertMessage = error.error.message;
         }
       })
-
   }
 
-  //METHODS FOR VALIDATIONS
+  //SERVICE METHOD FOR SEARCH A VEHICLE BY PLATE
+  searchVehicleByPlate(){
+    console.log(this.vehiclePlateDos);
+  }
+
+  //SERVICE METHOD FOR SEARCH CUSTOMER'S VEHICLES
+  searchVehiclesByCustomer(){
+    console.log(this.customerName.value);
+    this.router.navigate(['dashboard/customer-vehicles',this.customerName.value])
+      .catch(error => {
+        this.alertMessage = error.error.message;
+      })
+    /*this.vehicleService.searchVehiclesByCustomer(this.customerName?.value)
+      .pipe(finalize(() => {
+        this.router.navigate(['/dashboard/customer-vehicles']);
+      }))
+      .subscribe({
+        next: response => {
+          //console.log(response.lvb)
+          this.vehicleService.vehicleData.set(response.lvb);
+        },
+        error: error => {
+          this.alertMessage = error.error.message;
+        }
+      })*/
+  }
+
+  //VALIDATION METHOD FOR CREATE A VEHICLE
   updateErrorMessage() {
     //UPDATE MESSAGE FOR VEHICLE PLATE
     if (this.vehiclePlate!.hasError('required')) {
@@ -140,7 +183,7 @@ export class VehicleFormComponent {
     }
   }
 
-  //GETTERS
+  //GETTERS FOR CREATE A VEHICLE
   get vehiclePlate(){
     return this.formGroup.get('vehiclePlate');
   }

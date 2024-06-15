@@ -1,9 +1,14 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'
 
 //Local imports
+//Components
 import { CreateQuoteDTO } from '../../../shared/models/model';
+//Services
 import { QuoteService } from '../../../shared/services/quote.service';
+import { GeneralServiceService } from '../../../shared/services/general-service.service'
+//Others
 import { AlertModalComponent } from '../../../shared/alert-modal/alert-modal/alert-modal.component'
 
 //Imports for Angular Material
@@ -17,11 +22,11 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {provideNativeDateAdapter} from '@angular/material/core';
 
 //Imports for Reactive Forms
-import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormGroupDirective, FormControl } from '@angular/forms';
 
 //Imports for RXJS
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {merge, mergeWith, Observable} from 'rxjs';
+import {merge, finalize} from 'rxjs';
 
 @Component({
   selector: 'app-quote-form',
@@ -33,6 +38,11 @@ import {merge, mergeWith, Observable} from 'rxjs';
 })
 export class QuoteFormComponent {
 
+  //OTHER VARIABLES
+  private generalServiceService = inject(GeneralServiceService);
+  renderOption = this.generalServiceService.renderOption;
+
+  //VARIABLES FOR CREATE A QUOTE
   formGroup!: FormGroup;
   errorMessage1 = 'Este campo es requerido';
   errorMessage2 = 'Campo requerido';
@@ -43,7 +53,14 @@ export class QuoteFormComponent {
   @ViewChild(FormGroupDirective)
   private formDir!: FormGroupDirective;
 
-  constructor(private formBuilder: FormBuilder) {
+  //VARIABLES FOR SEARCH A QUOTE BY ID
+  quoteId = new FormControl('', [Validators.required]);
+  errorMessage5 = 'Este campo es requerido';
+
+  //VARIABLES FOR SEARCH VEHICLE'S QUOTES
+  vehiclePlateDos = new FormControl('', [Validators.required]);
+
+  constructor(private formBuilder: FormBuilder, private router: Router) {
     this.buildForm()
 
     let observable2 = this.formGroup.statusChanges;
@@ -53,7 +70,7 @@ export class QuoteFormComponent {
       .subscribe(() => this.updateErrorMessage());
   }
 
-  //METHODS FOR FORMGROUP
+  //METHODS FOR CREATE A QUOTE'S FORMGROUP
   private buildForm(){
     this.formGroup = this.formBuilder.group({
       quoteDeadline: ['', [Validators.required]],
@@ -70,11 +87,10 @@ export class QuoteFormComponent {
     this.formDir.resetForm();
   }
 
-  //METHODS FOR SERVICE
+  //SERVICE METHOD FOR CREATE A QUOTE
   private quoteService = inject(QuoteService);
 
   saveFormGroup(event: Event){
-
     console.log(this.formGroup.value)
     const quote: CreateQuoteDTO = this.formGroup.value;
     const orderDate = new Date();
@@ -103,7 +119,32 @@ export class QuoteFormComponent {
           this.alertMessage = error.error.message;
         }
       })
+  }
 
+  //SERVICE METHOD FOR SEARCH A QUOTE BY ID
+  searchQuoteById(){
+    console.log(this.quoteId)
+  }
+
+  //SERVICE METHOD FOR SEARCH VEHICLE'S QUOTES
+  searchQuotesByPlate(){
+    console.log(this.vehiclePlateDos);
+    this.router.navigate(['dashboard/vehicle-quotes',this.vehiclePlateDos.value])
+      .catch(error => {
+        this.alertMessage = error.error.message;
+      })
+    /*this.quoteService.searchQuotesByPlate(this.vehiclePlateDos?.value)
+      .pipe(finalize(() => {
+        this.router.navigate(['/dashboard/vehicle-quotes']);
+      }))
+      .subscribe({
+        next: response => {
+          this.quoteService.quoteData.set(response.lqb);
+        },
+        error: error => {
+          this.alertMessage = error.error.message;
+        }
+      })*/
   }
 
   //OTHER METHODS
@@ -113,7 +154,7 @@ export class QuoteFormComponent {
     return datePart1 + ' ' + datePart2
   }
 
-  //METHODS FOR VALIDATIONS
+  //VALIDATION METHOD FOR CREATE A QUOTE
   updateErrorMessage() {
     //UPDATE MESSAGE FOR VEHICLE PLATE
     if (this.vehiclePlate!.hasError('required')) {
@@ -138,7 +179,7 @@ export class QuoteFormComponent {
     }
   }
 
-  //GETTERS
+  //GETTERS FOR CREATE A QUOTE
   get quoteDeadline(){
     return this.formGroup.get('quoteDeadline');
   }

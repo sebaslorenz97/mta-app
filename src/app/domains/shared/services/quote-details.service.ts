@@ -24,4 +24,12 @@ export class QuoteDetailsService {
      });
   }
 
+  searchQuoteDetailsByQuoteId(quote: string | null){
+    return this.httpClient.get<Response>(`${this.apiUrl}/getallquotedetailsbyquoteid/${quote}`,{
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+    })
+  }
+
 }

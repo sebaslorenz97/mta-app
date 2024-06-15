@@ -1,0 +1,57 @@
+<div class="row">
+  <div class="col-10 bg-light">
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="vehiclePlate">
+          <th mat-header-cell *matHeaderCellDef class="plate"> Placa </th>
+          <td mat-cell *matCellDef="let element" class="plate"> {{element.vehiclePlate}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="vehicleColor">
+          <th mat-header-cell *matHeaderCellDef class="color"> Color </th>
+          <td mat-cell *matCellDef="let element" class="color"> {{element.vehicleColor}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="vehicleMillage">
+          <th mat-header-cell *matHeaderCellDef class="millage"> Kilometraje </th>
+          <td mat-cell *matCellDef="let element" class="millage"> {{element.vehicleMillage}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="vehicleLineNameFk">
+          <th mat-header-cell *matHeaderCellDef class="line"> Marca </th>
+          <td mat-cell *matCellDef="let element" class="line"> {{element.vehicleLineNameFk}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="vehicleModelNameFk">
+          <th mat-header-cell *matHeaderCellDef class="model"> Modelo </th>
+          <td mat-cell *matCellDef="let element" class="model"> {{element.vehicleModelNameFk}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="vehicleYearValueFk">
+          <th mat-header-cell *matHeaderCellDef class="year"> Año </th>
+          <td mat-cell *matCellDef="let element" class="year"> {{element.vehicleYearValueFk}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+            mat-row
+            (dblclick)="searchQuotesByPlate(row)"
+            [class.demo-row-is-clicked]="clickedRows.has(row)"
+            *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                     showFirstLastButtons
+                     aria-label="Select page of customer vehicle elements">
+      </mat-paginator>
+      <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
+    </div>
+  </div>
+</div>

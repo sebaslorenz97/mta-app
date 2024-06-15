@@ -1,0 +1,68 @@
+<div class="row">
+  <div class="col-10 bg-light">
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+
+        <!-- Quote ID Column -->
+        <ng-container matColumnDef="quoteId">
+          <th mat-header-cell *matHeaderCellDef class="id"> ID </th>
+          <td mat-cell *matCellDef="let element" class="id" aria-selected="true"> {{element.quoteId}} </td>
+        </ng-container>
+
+        <!-- Order Date Column -->
+        <ng-container matColumnDef="quoteOrderDate">
+          <th mat-header-cell *matHeaderCellDef class="orderDate"> Fecha de Orden </th>
+          <td mat-cell *matCellDef="let element" class="orderDate"> {{element.quoteOrderDate}} </td>
+        </ng-container>
+
+        <!-- Deadline Date Column -->
+        <ng-container matColumnDef="quoteDeadline">
+          <th mat-header-cell *matHeaderCellDef class="deadlineDate"> Fecha de Entrega </th>
+          <td mat-cell *matCellDef="let element" class="deadlineDate"> {{element.quoteDeadline}} </td>
+        </ng-container>
+
+        <!-- Vehicle Status Column -->
+        <ng-container matColumnDef="quoteStatusVehicle">
+          <th mat-header-cell *matHeaderCellDef class="status"> Estatus del Vehiculo </th>
+          <td mat-cell *matCellDef="let element" class="status"> {{element.quoteStatusVehicle}} </td>
+        </ng-container>
+
+        <!-- Credit Card Payment Column -->
+        <ng-container matColumnDef="quotePaymentMethod">
+          <th mat-header-cell *matHeaderCellDef class="paymentMethod"> ¿Pago con tarjeta? </th>
+          <td mat-cell *matCellDef="let element" class="paymentMethod"> {{element.quotePaymentMethod}} </td>
+        </ng-container>
+
+        <!--  Payment Status Column -->
+        <ng-container matColumnDef="quotePaymentStatus">
+          <th mat-header-cell *matHeaderCellDef class="year"> ¿Pagado? </th>
+          <td mat-cell *matCellDef="let element" class="year"> {{element.quotePaymentStatus}} </td>
+        </ng-container>
+
+        <!-- Invoice Column -->
+        <ng-container matColumnDef="quoteRequireInvoice">
+          <th mat-header-cell *matHeaderCellDef class="invoice"> ¿Factura? </th>
+          <td mat-cell *matCellDef="let element" class="invoice"> {{element.quoteRequireInvoice}} </td>
+        </ng-container>
+
+        <!-- Total Column -->
+        <ng-container matColumnDef="quoteAdvancePayment">
+          <th mat-header-cell *matHeaderCellDef class="total"> Total </th>
+          <td mat-cell *matCellDef="let element" class="total"> {{element.quoteAdvancePayment}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+            mat-row
+            (dblclick)="searchQuoteDetailsByQuoteId(row)"
+            [class.demo-row-is-clicked]="clickedRows.has(row)"
+            *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                     showFirstLastButtons
+                     aria-label="Select page of vehicle quote elements">
+      </mat-paginator>
+    </div>
+  </div>
+</div>

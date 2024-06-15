@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { CreateQuoteDTO, Response } from '../models/model'
+import { CreateQuoteDTO, Response, Quote } from '../models/model'
 import { devEnvironment } from '../environments/dev.environment';
 import { TokenService } from '../../shared/services/token.service';
 
@@ -16,6 +16,7 @@ export class QuoteService {
 
   constructor() { }
 
+  //CALLS TO THE ENDPOINTSs
   saveQuote(data: CreateQuoteDTO){
     return this.httpClient.post<Response>(`${this.apiUrl}/savenewquote`, data, {
       headers: {
@@ -23,5 +24,16 @@ export class QuoteService {
       }
      });
   }
+
+  searchQuotesByPlate(vehiclePlate: string | null){
+    return this.httpClient.get<Response>(`${this.apiUrl}/searchvehiclequotesbyvehicleplate/${vehiclePlate}`,{
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+    })
+  }
+
+  //DATA SHARED BETWEEN COMPONENTS
+  quoteData = signal<Quote[]>([]);
 
 }

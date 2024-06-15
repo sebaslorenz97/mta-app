@@ -10,6 +10,8 @@ export interface Response{
     vyb: string;
     qb: Quote;
     lqdb: QuoteDetail[];
+    lvb: Vehicle[]
+    lqb: Quote[]
     ub: User;
     urb: UserRole;
     roles: string;
@@ -87,7 +89,7 @@ export interface Quote{
 export interface CreateQuoteDTO extends Omit<Quote, 'quoteId'>{
 }
 
-interface QuoteDetail{
+export interface QuoteDetail{
   quoteDetailMecId: number,
   quoteDetailLabour: string,
   quoteDetailAmount: number,

@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { CreateVehicleDTO, Response } from '../models/model'
+import { CreateVehicleDTO, Response, Vehicle } from '../models/model'
 import { devEnvironment } from '../environments/dev.environment';
 import { TokenService } from '../../shared/services/token.service';
 
@@ -16,6 +16,7 @@ export class VehicleService {
 
   constructor() { }
 
+  //CALLS TO THE ENDPOINTS
   saveVehicle(data: CreateVehicleDTO){
     return this.httpClient.post<Response>(`${this.apiUrl}/savenewvehicle`, data, {
       headers: {
@@ -23,5 +24,18 @@ export class VehicleService {
       }
      });
   }
+
+  searchVehiclesByCustomer(customer: string | null){
+    return this.httpClient.get<Response>(`${this.apiUrl}/getcustomervehiclesbycustomername/${customer}`,{
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+    })
+  }
+
+  //DATA SHARED BETWEEN COMPONENTS
+  vehicleData = signal<Vehicle[]>([]);
+
+
 
 }

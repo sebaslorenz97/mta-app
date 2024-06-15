@@ -1,0 +1,43 @@
+table {
+  width: 1000px;
+}
+
+.plate{
+ width: 15%;
+}
+
+.color{
+  width: 12.5%;
+ }
+
+ .millage{
+  width: 12.5%;
+ }
+
+ .line{
+  width: 25%;
+ }
+
+ .model{
+  width: 25%;
+ }
+
+ .year{
+  width: 10%;
+ }
+
+ .demo-table {
+  width: 100%;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  border-color: currentColor;
+  font-weight: bold;
+  background-color: rgb(189, 208, 244);
+}

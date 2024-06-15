@@ -6,6 +6,7 @@ import { MyValidators } from '../../../shared/utils/validators';
 import { CreateUserDTO, User } from '../../../shared/models/model';
 import { UserService } from '../../../shared/services/user.service';
 import { AlertModalComponent } from '../../../shared/alert-modal/alert-modal/alert-modal.component'
+import { GeneralServiceService } from '../../../shared/services/general-service.service'
 
 //Imports for Angular Material
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -33,6 +34,11 @@ import {merge, mergeWith, Observable} from 'rxjs';
 
 export class UserFormComponent {
 
+  //OTHER VARIABLES
+  private generalServiceService = inject(GeneralServiceService);
+  renderOption = this.generalServiceService.renderOption;
+
+  //VARIABLES FOR CREATE USER
   hide = true;
   formGroup!: FormGroup;
   errorMessage1 = 'Este campo es requerido';
@@ -46,6 +52,10 @@ export class UserFormComponent {
   @ViewChild(FormGroupDirective)
   private formDir!: FormGroupDirective;
 
+  //VARIABLES FOR SEARCH USER BY NAME
+  userPkDos = new FormControl('', [Validators.required]);
+  errorMessage7 = 'Este campo es requerido';
+
   constructor(private formBuilder: FormBuilder) {
     this.buildForm();
 
@@ -56,7 +66,7 @@ export class UserFormComponent {
       .subscribe(() => this.updateErrorMessage());
   }
 
-  //METHODS FOR FORMGROUP
+  //METHODS FOR CREATE FORMGROUP
   private buildForm(){
     this.formGroup = this.formBuilder.group({
       userPk: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)([A-Za-z\d]|[^ ]){8,15}$/)]],
@@ -76,7 +86,7 @@ export class UserFormComponent {
     this.formDir.resetForm();
   }
 
-  //METHODS FOR SERVICE
+  //SERVICE FOR CREATE
   private userService = inject(UserService);
 
   saveFormGroup(event: Event){
@@ -101,6 +111,11 @@ export class UserFormComponent {
           this.alertMessage = error.error.message;
         }
       })
+  }
+
+  //SERVICE FOR SEARCH USER BY NAME
+  searchUserByUser(){
+    console.log(this.userPkDos)
   }
 
   //OTHER METHODS

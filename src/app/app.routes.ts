@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+//IMPORTS FOR PAGES
 import { DashboardLayoutComponent } from '../app/domains/shared/components/dashboard-layout/dashboard-layout.component';
 import { HomeComponent } from '../app/domains/home/pages/home/home.component'
 import { AboutComponent } from '../app/domains/home/pages/about/about.component'
@@ -9,9 +10,16 @@ import { UserAndRolesDashboardComponent } from '../app/domains/dashboard/pages/u
 import { CustomerDashboardComponent } from '../app/domains/dashboard/pages/customer-dashboard/customer-dashboard.component'
 import { VehicleDashboardComponent } from '../app/domains/dashboard/pages/vehicle-dashboard/vehicle-dashboard.component'
 import { QuoteAndDetailsDashboardComponent } from '../app/domains/dashboard/pages/quote-and-details-dashboard/quote-and-details-dashboard.component'
+import { CustomerVehiclesDashboardComponent } from '../app/domains/dashboard/pages/customer-vehicles-dashboard/customer-vehicles-dashboard.component'
+import { VehicleQuotesDashboardComponent } from '../app/domains/dashboard/pages/vehicle-quotes-dashboard/vehicle-quotes-dashboard.component'
+import { QuoteDetailsDashboardComponent } from '../app/domains/dashboard/pages/quote-details-dashboard/quote-details-dashboard.component'
+//IMPORTS FOR GUARDS
 import { authGuard } from '././domains/shared/guards/auth.guard'
 import { redirectGuard } from '././domains/shared/guards/redirect.guard'
-
+//IMPORTS FOR RESOLVERS
+import { vehicleResolver } from './domains/shared/resolvers/vehicle.resolver'
+import { quoteResolver } from './domains/shared/resolvers/quote.resolver'
+import { quoteDetailResolver } from './domains/shared/resolvers/quote-detail.resolver'
 
 export const routes: Routes = [
   {
@@ -54,13 +62,37 @@ export const routes: Routes = [
       {
         path: 'vehicle',
         //canActivate: [ authGuard ],
-        component: VehicleDashboardComponent
+        component: VehicleDashboardComponent,
       },
       {
         path: 'quote-and-details',
         //canActivate: [ authGuard ],
         component: QuoteAndDetailsDashboardComponent
+      },
+      {
+        path: 'customer-vehicles/:customerName',
+        //canActivate: [ redirectGuard ],
+        component: CustomerVehiclesDashboardComponent,
+        resolve: {
+          customerVehicles: vehicleResolver
+        }
+      },
+      {
+        path: 'vehicle-quotes/:vehiclePlateDos',
+        //canActivate: [ redirectGuard ],
+        component: VehicleQuotesDashboardComponent,
+        resolve: {
+          vehicleQuotes: quoteResolver
+        }
+      },
+      {
+        path: 'quote-details/:quoteId',
+        //canActivate: [ redirectGuard ],
+        component: QuoteDetailsDashboardComponent,
+        resolve: {
+          quoteDetails: quoteDetailResolver
+        }
       }
     ]
-  }
+  },
 ];
