@@ -4,6 +4,7 @@ import { Router } from '@angular/router'
 
 //Imports for Services
 import { AuthService } from '../../../shared/services/auth.service';
+import { GeneralServiceService } from '../../../shared/services/general-service.service'
 
 //Imports for Angular Material
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -29,6 +30,10 @@ import {merge, mergeWith, Observable} from 'rxjs';
 
 
 export class LoginFormComponent {
+
+  //OTHER VARIABLES
+  private generalServiceService = inject(GeneralServiceService);
+  rolesFromAuthentication = this.generalServiceService.rolesFromAuthentication;
 
   hide = true;
   formGroup!: FormGroup;
@@ -88,22 +93,17 @@ export class LoginFormComponent {
   private authService = inject(AuthService);
 
   loginIn(event: Event){
-    console.log(this.formGroup.value)
-
     if(this.formGroup.valid){
       this.authService.login(this.userName?.value, this.userPassword?.value)
       .subscribe({
         next: response => {
           this.status = 'succed'
+          this.rolesFromAuthentication.set(response.body!.rolesFromAuthentication)
           this.router.navigate(['/dashboard'])
         },
         error: error => {
           this.status = 'failed'
-          if(error.error != null){
-            this.errorMessage = error.error.message;
-          }else if(error.error == null){
-            this.errorMessage = "La contraseña es invalida, rectificala"
-          }
+          this.errorMessage = 'Credenciales Invalidas rectificalas';
         }
       })
     }

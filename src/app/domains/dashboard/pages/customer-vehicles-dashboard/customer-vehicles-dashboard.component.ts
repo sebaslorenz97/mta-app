@@ -77,5 +77,5 @@ export interface VehicleForTable {
   vehicleMillage: number;
   vehicleLineNameFk: string;
   vehicleModelNameFk: string;
-  vehicleYearValueFk: string;
+  vehicleYearValueFk: number;
 }

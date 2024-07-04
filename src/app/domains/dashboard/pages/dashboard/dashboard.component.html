@@ -1,5 +1,8 @@
-<div class="row">
-  <div class=" col-10 form-rendered-5">
-    <app-profile-form></app-profile-form>
+<div class="row" *ngIf="renderOption() == 20">
+  <div class="col-6 form-rendered-4 bg-light">
+    <app-user-form [userData]="this.userData"></app-user-form>
+  </div>
+  <div class="col-6 form-rendered-4 bg-light">
+    <app-user-roles-form [userRolesData]="this.userRolesData" [user]="this.userData.userPk" ></app-user-roles-form>
   </div>
 </div>

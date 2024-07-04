@@ -1,10 +1,12 @@
-import { Component, ChangeDetectorRef, OnInit, inject, ViewChild } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit, inject, ViewChild, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 //Local imports
-import { QuoteDetails } from '../../../shared/models/model';
+import { QuoteDetail, QuoteDetailsCUD } from '../../../shared/models/model';
 import { QuoteDetailsService } from '../../../shared/services/quote-details.service';
 import { AlertModalComponent } from '../../../shared/alert-modal/alert-modal/alert-modal.component'
+
+import { GeneralServiceService } from '../../../shared/services/general-service.service'
 
 //Imports for Angular Material
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -29,7 +31,11 @@ import {merge, mergeWith, Observable} from 'rxjs';
   templateUrl: './quote-details-form.component.html',
   styleUrl: './quote-details-form.component.css'
 })
-export class QuoteDetailsFormComponent {
+export class QuoteDetailsFormComponent implements OnInit {
+
+  //OTHER VARIABLES
+  private generalServiceService = inject(GeneralServiceService);
+  renderOption = this.generalServiceService.renderOption;
 
   quoteDetailIdFk = new FormControl('',[Validators.required, Validators.pattern(/^[0-9]{1,4}$/)]);
   formGroup!: FormGroup;
@@ -41,6 +47,11 @@ export class QuoteDetailsFormComponent {
   @ViewChild(FormGroupDirective)
   private formDir!: FormGroupDirective;
 
+  //VARIABLES FOR UPDATE USER
+  @Input() detailsData?: QuoteDetail[] | undefined;
+  @Input() quote?: string | undefined;
+  lqdbForDelete:number[] =  [];
+
   constructor(private formBuilder: FormBuilder,
     private cdr: ChangeDetectorRef) {
       merge(this.quoteDetailIdFk!.statusChanges, this.quoteDetailIdFk?.valueChanges)
@@ -49,16 +60,24 @@ export class QuoteDetailsFormComponent {
   }
 
   ngOnInit(){
-
     this.formGroup = this.formBuilder.group({
       lqdb: this.formBuilder.array([],[Validators.required])
     });
+
+    if(this.renderOption() === 18){
+      this.quoteDetailIdFk!.setValue(this.quote!)
+      this.quoteDetailIdFk!.disable();
+
+      this.loadAllDetails();
+      console.log(this.formGroup.value);
+    }
   }
 
   //METHODS FOR FORM GROUP
   addDetail(){
     const detailForm = this.formBuilder.group({
-      quoteDetailMecId: [,[Validators.required, Validators.pattern(/^[1-9]{1,2}$/)]],
+      quoteDetailId: [],
+      quoteDetailMecId: [,[Validators.required, Validators.pattern(/^[0-9]{1,3}$/)]],
       quoteDetailLabour: ['',[Validators.required]],
       quoteDetailAmount: [, [Validators.required, Validators.pattern(/^[0-9]{1,4}$/)]],
       quoteDetailIdFk:[this.quoteDetailIdFk.value]
@@ -74,6 +93,11 @@ export class QuoteDetailsFormComponent {
   }
 
   deleteDetail(i: number){
+    if(this.lqdb!.at(i).get('quoteDetailId')?.value != null){
+      console.log('MEC ID ELIMINADO ---> '+ this.lqdb!.at(i).get('quoteDetailMecId')!.value)
+      console.log('IS A NUMBER? ---> '+ typeof this.lqdb!.at(i).get('quoteDetailMecId')!.value)
+      this.lqdbForDelete.push(this.lqdb!.at(i).get('quoteDetailId')!.value);
+    }
     this.lqdb.removeAt(i);
     console.log('DETALLE ELIMINADO: '+i)
     this.dataSource = new MatTableDataSource(this.lqdb.controls);
@@ -86,6 +110,25 @@ export class QuoteDetailsFormComponent {
     }
   }
 
+  loadAllDetails(){
+    this.detailsData?.forEach((detail, index) => {
+      this.addDetail();
+      this.lqdb!.at(index).setValue({
+        quoteDetailId: detail.quoteDetailId,
+        quoteDetailMecId: detail.quoteDetailMecId,
+        quoteDetailLabour: detail.quoteDetailLabour,
+        quoteDetailAmount: detail.quoteDetailAmount,
+        quoteDetailIdFk: detail.quoteDetailIdFk,
+      });
+    })
+    /*console.log('------------------   VALORES GUARDADOS EN LA TABLA ----------------------')
+    let i: number;
+    for(i = 0; i < this.lqdb.length; i++){
+      console.log(this.lqdb.at(i).value)
+    }
+    console.log('-------------------------------------------------------------------------')*/
+  }
+
   private cleanAllTheForm(){
     //this.formDir.resetForm();
     this.deleteAllDetails();
@@ -95,14 +138,36 @@ export class QuoteDetailsFormComponent {
     //this.quoteDetailIdFk.setErrors(null);
   }
 
-  //METHODS FOR SERVICE
+  //SERVICE METHOD FOR ADD, EDIT AND DELETE DETAILS
   private quoteDetailsService = inject(QuoteDetailsService);
 
-  saveFormGroup() {
-    //console.log(this.details.value);
-    console.log(this.formGroup.value)
-    const quoteDetails: QuoteDetails = this.formGroup.value;
-    console.log(quoteDetails)
+  saveUpdateAndDeleteDetails() {
+    //console.log(this.formGroup.get('lqdb')!.value)
+    let quoteDetailsCud: QuoteDetailsCUD = this.formGroup.value;
+    //console.log('VALUE OF lqdb')
+    //console.log(quoteDetailsCud.lqdb)
+    quoteDetailsCud.lqdbForDelete = this.lqdbForDelete;
+    console.log(quoteDetailsCud)
+
+    this.quoteDetailsService.saveQuoteDetails(quoteDetailsCud)
+      .subscribe({
+        next: response => {
+          console.log(response)
+          this.alertMessage = `${response.message}. Se actualizaron los detalles de la cotizacion`;
+          //START: ENABLE QUOTE ID FIELD: AFTER THE QUOTE DETAILS FORM IS SUBMITTED THE FIELD MUST BE ENABLED AGAIN
+          this.quoteDetailIdFk!.enable();
+          //END: ENABLE QUOTE ID FIELD
+          this.cleanAllTheForm();
+        },
+        error: error => {
+          this.alertMessage = error.error;
+        }
+      })
+  }
+
+  /*saveDetails() {
+    const quoteDetails: QuoteDetail[] = this.formGroup.value;
+
     this.quoteDetailsService.saveQuoteDetails(quoteDetails)
       .subscribe({
         next: response => {
@@ -117,7 +182,7 @@ export class QuoteDetailsFormComponent {
           this.alertMessage = error.error.message;
         }
       })
-  }
+  }*/
 
   //OTHER METHODS
 

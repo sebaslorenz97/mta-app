@@ -1,10 +1,10 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'
 
 //Local imports
 //Components
-import { CreateQuoteDTO } from '../../../shared/models/model';
+import { CreateQuoteDTO, Quote } from '../../../shared/models/model';
 //Services
 import { QuoteService } from '../../../shared/services/quote.service';
 import { GeneralServiceService } from '../../../shared/services/general-service.service'
@@ -36,7 +36,7 @@ import {merge, finalize} from 'rxjs';
   templateUrl: './quote-form.component.html',
   styleUrl: './quote-form.component.css'
 })
-export class QuoteFormComponent {
+export class QuoteFormComponent implements OnInit {
 
   //OTHER VARIABLES
   private generalServiceService = inject(GeneralServiceService);
@@ -60,6 +60,14 @@ export class QuoteFormComponent {
   //VARIABLES FOR SEARCH VEHICLE'S QUOTES
   vehiclePlateDos = new FormControl('', [Validators.required]);
 
+  //VARIABLES FOR UPDATE USER
+  @Input() quoteData?: Quote | undefined;
+  //readonly startDate = new Date(1990, 0, 1);
+  startDate?: Date;
+  year?: number;
+  month?: number;
+  day?: number;
+
   constructor(private formBuilder: FormBuilder, private router: Router) {
     this.buildForm()
 
@@ -68,6 +76,23 @@ export class QuoteFormComponent {
     merge(observable3 as any, observable2 as any)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorMessage());
+  }
+
+  ngOnInit(): void {
+    if(this.renderOption() === 18){
+      this.quoteId!.setValue(this.quoteData!.quoteId.toString())
+      this.quoteId!.disable();
+
+      this.dateExtractor(this.quoteData!.quoteDeadline)
+      this.quoteDeadline!.setValue(new Date(this.year!,this.month!,this.day!));
+      this.vehiclePlate!.setValue(this.quoteData!.vehicleNameFk);
+      this.quoteStatusVehicle!.setValue(this.quoteData!.quoteStatusVehicle);
+      this.quotePaymentMethod!.setValue(this.quoteData!.quotePaymentMethod);
+      this.quotePaymentStatus!.setValue(this.quoteData!.quotePaymentStatus);
+      this.quoteRequireInvoice!.setValue(this.quoteData!.quoteRequireInvoice);
+      this.quoteAdvancePayment!.setValue(this.quoteData!.quoteAdvancePayment);
+      console.log(this.formGroup.value);
+    }
   }
 
   //METHODS FOR CREATE A QUOTE'S FORMGROUP
@@ -121,9 +146,47 @@ export class QuoteFormComponent {
       })
   }
 
+  updateQuoteById(){
+    const quote: Quote = this.formGroup.value;
+    quote.quoteId = this.quoteData!.quoteId;
+    quote.quoteOrderDate = this.quoteData!.quoteOrderDate;
+    quote.quoteDeadline = this.formatDate(new Date(quote.quoteDeadline));
+    console.log(quote)
+
+    this.quoteService.updateQuoteById(quote)
+      .subscribe({
+        next: response => {
+          console.log(response)
+          this.alertMessage = `${response.message}`;
+        },
+        error: error => {
+          this.alertMessage = error.error.message;
+        }
+      })
+  }
+
+  deleteQuoteAndDetailsById(){
+    const quote: string = this.quoteData!.quoteId.toString();
+    this.quoteService.deleteQuoteAndDetailsById(quote)
+      .subscribe({
+        next: response => {
+          console.log(response)
+          this.alertMessage = `${response.message}`;
+          this.cleanFormGroup();
+        },
+        error: error => {
+          this.alertMessage = error.error.message;
+        }
+      })
+  }
+
   //SERVICE METHOD FOR SEARCH A QUOTE BY ID
   searchQuoteById(){
     console.log(this.quoteId)
+    this.router.navigate(['dashboard/rud-quote-and-details',this.quoteId.value])
+      .catch(error => {
+        this.alertMessage = error.error.message;
+      })
   }
 
   //SERVICE METHOD FOR SEARCH VEHICLE'S QUOTES
@@ -133,18 +196,6 @@ export class QuoteFormComponent {
       .catch(error => {
         this.alertMessage = error.error.message;
       })
-    /*this.quoteService.searchQuotesByPlate(this.vehiclePlateDos?.value)
-      .pipe(finalize(() => {
-        this.router.navigate(['/dashboard/vehicle-quotes']);
-      }))
-      .subscribe({
-        next: response => {
-          this.quoteService.quoteData.set(response.lqb);
-        },
-        error: error => {
-          this.alertMessage = error.error.message;
-        }
-      })*/
   }
 
   //OTHER METHODS
@@ -152,6 +203,17 @@ export class QuoteFormComponent {
     const datePart1 = date.toLocaleDateString('en-CA');
     const datePart2 = date.toLocaleString().split(',')[1].trim();
     return datePart1 + ' ' + datePart2
+  }
+
+  dateExtractor(date: string){
+    this.year = parseInt(date.substring(0,4));
+    this.month = parseInt(date.substring(5,7));
+    if(this.month != 0){
+      this.month = this.month -1;
+    }
+    this.day = parseInt(date.substring(8,10));
+    console.log('------------------- DATE EXTRACTED ----------------')
+    console.log(this.year + this.month + this.day)
   }
 
   //VALIDATION METHOD FOR CREATE A QUOTE

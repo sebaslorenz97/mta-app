@@ -24,7 +24,10 @@ export class DashboardNavbarComponent {
 
   changeRenderOptionSearchUserByName(){
     this.generalServiceService.renderOption.set(1)
-    this.generalServiceService.model.set('Buscar por Nombre')
+  }
+
+  changeRenderOptionSearchUserByMecId(){
+    this.generalServiceService.renderOption.set(10)
   }
 
   //FOR CUSTOMER
@@ -34,7 +37,6 @@ export class DashboardNavbarComponent {
 
   changeRenderOptionSearchCustomerByName(){
     this.generalServiceService.renderOption.set(3)
-    this.generalServiceService.model.set('Por Nombre de Cliente')
   }
 
   //FOR VEHICLE
@@ -44,12 +46,10 @@ export class DashboardNavbarComponent {
 
   changeRenderOptionSearchVehicleByPlate(){
     this.generalServiceService.renderOption.set(5)
-    this.generalServiceService.model.set('Por Placa de Vehiculo')
   }
 
   changeRenderOptionSearchVehiclesByCustomer(){
     this.generalServiceService.renderOption.set(6)
-    this.generalServiceService.model.set('Por Nombre de Cliente')
   }
 
   //FOR QUOTE AND DETAILS
@@ -59,12 +59,10 @@ export class DashboardNavbarComponent {
 
   changeRenderOptionSearchQuoteById(){
     this.generalServiceService.renderOption.set(8)
-    this.generalServiceService.model.set('Por ID de Cotizacion')
   }
 
   changeRenderOptionSearchQuotesByVehicle(){
     this.generalServiceService.renderOption.set(9)
-    this.generalServiceService.model.set('Por Placa de Vehiculo')
   }
 
 }

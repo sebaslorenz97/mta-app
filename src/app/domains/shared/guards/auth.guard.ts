@@ -11,3 +11,11 @@ export const authGuard: CanActivateFn = (route, state) => {
   }
   return true;
 };
+
+export const hasRoleGuard: CanActivateFn = (route, state) => {
+  const token: string | undefined = inject(TokenService).getToken();
+  if (!token) {
+    inject(Router).navigate(['/login']);
+  }
+  return true;
+};

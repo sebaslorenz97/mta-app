@@ -1,5 +1,17 @@
-<!-- FORM FOR CREATE A CUSTOMER -->
-<div *ngIf="renderOption() == 2">
+<!-- FORM FOR CREATE OR UPDATE OR DELETE A CUSTOMER -->
+<div *ngIf="renderOption() == 2 || renderOption() == 13">
+  <mat-card class="form mb-2" *ngIf="renderOption() == 13">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field>
+            <mat-label>Cliente</mat-label>
+            <input matInput [formControl]="customerNameDos">
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
   <form [formGroup]="formGroup" (ngSubmit)="saveFormGroup($event)">
     <mat-card class="form">
       <mat-card-content class="container">
@@ -98,7 +110,9 @@
             </mat-form-field>
           </div>
         </div>
-        <button [disabled]="formGroup.invalid" type="submit" class="btn btn-primary">Crear Cliente</button>
+        <button *ngIf="renderOption() == 2" [disabled]="formGroup.invalid" type="submit" class="btn btn-success">Crear Cliente</button>
+        <button *ngIf="renderOption() == 13" [disabled]="formGroup.invalid" type="button" (click)="updateCustomerByName()" class="btn btn-warning">Actualizar Usuario</button>
+        <button *ngIf="renderOption() == 13" [disabled]="formGroup.invalid" type="button" (click)="deleteCustomerByName()" class="btn btn-danger">Eliminar Usuario</button>
         <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
       </mat-card-content>
     </mat-card>
@@ -126,3 +140,6 @@
     </mat-card-content>
   </mat-card>
 </div>
+
+<!-- ALERT MESSAGE -->
+<app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>

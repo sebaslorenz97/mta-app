@@ -1,5 +1,11 @@
 .form-rendered-4{
-  width: 500px;
+  width: 640px;
+  height: 100%;
+  background-color: blue;
+}
+
+.form-rendered-5{
+  width: 450px;
   height: 100%;
   background-color: blue;
 }

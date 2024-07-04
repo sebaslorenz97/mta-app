@@ -14,4 +14,16 @@ export class MyValidators {
     return  null;
   }
 
+  static passwordValidatorForMyUser:  ValidatorFn  = (control:AbstractControl):  ValidationErrors|  null  =>{
+    const  password  =  control.get('myUserPassword');
+    const  confirmpassword  =  control.get('myUserPasswordConfirmation');
+    if(password  &&  confirmpassword  &&  password.value  !=  confirmpassword.value){
+      control.get('myUserPasswordConfirmation')?.setErrors({invalid_match: true});
+      return {
+        invalid_match :  true
+      }
+    }
+    return  null;
+  }
+
 }

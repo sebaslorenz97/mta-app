@@ -7,7 +7,12 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 import { Response } from '../models/model';
 import { VehicleService } from '../../shared/services/vehicle.service'
 
-export const vehicleResolver: ResolveFn<Response> = (route, state) => {
+export const vehicleResolverForSearchCustomerVehicles: ResolveFn<Response> = (route, state) => {
   route: ActivatedRouteSnapshot
-  return inject(VehicleService).searchVehiclesByCustomer(route.paramMap.get('customerName'));
+  return inject(VehicleService).searchCustomerVehicles(route.paramMap.get('customerName'));
+};
+
+export const vehicleResolverForSearchVehicleByPlate: ResolveFn<Response> = (route, state) => {
+  route: ActivatedRouteSnapshot
+  return inject(VehicleService).searchVehicleByPlate(route.paramMap.get('vehiclePlateDos'));
 };

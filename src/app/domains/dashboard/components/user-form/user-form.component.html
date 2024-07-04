@@ -1,21 +1,29 @@
-<div *ngIf="renderOption() == 0">
+<!-- FORM FOR CREATE OR UPDATE OR DELETE A CUSTOMER -->
+<div *ngIf="renderOption() == 0 || renderOption() == 11 || renderOption() == 20">
   <form [formGroup]="formGroup" (ngSubmit)="saveFormGroup($event)">
     <mat-card class="form">
       <mat-card-content class="container">
-
-        <div class="row">
+        <div class="row" *ngIf="renderOption() == 11 || renderOption() == 20">
+          <div class="col-12">
+            <mat-form-field>
+              <mat-label>Usuario</mat-label>
+              <input matInput [formControl]="userPkDos">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row" *ngIf="renderOption() == 0">
           <div class="col-12">
             <mat-form-field>
               <mat-label>Crea un usuario</mat-label>
               <input matInput formControlName="userPk">
-              <mat-hint align="start">Min 8, Max 15, Al menos una letra mayus, minus, un digito y no espacios en blanco.</mat-hint>
+              <mat-hint align="start">Min 8, Max 15, Al menos: Una letra mayus y minus Y Un digito</mat-hint>
               @if (this.userPk!.invalid) {
                 <mat-error>{{errorMessage1}}</mat-error>
               }
             </mat-form-field>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="renderOption() == 0">
           <div class="col-12">
             <mat-form-field>
               <mat-label>Crea una contraseña</mat-label>
@@ -23,14 +31,14 @@
               <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
               </button>
-              <mat-hint align="start">Min 10, Max 20, Al menos una letra mayus, minus, un digito y un caracter especial, No espacios en blanco. </mat-hint>
+              <mat-hint align="start">Min 10 Max 20, Al menos: Una letra mayus y minus, Un digito Y Un caracter admitido(&#36;&#64;&#33;&#37;&#42;&#63;&#38;)</mat-hint>
               @if (this.userPassword!.invalid) {
                 <mat-error>{{errorMessage2}}</mat-error>
               }
             </mat-form-field>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="renderOption() == 0">
           <div class="col-12">
             <mat-form-field>
               <mat-label>Confirma tu contraseña</mat-label>
@@ -51,6 +59,17 @@
               <input matInput formControlName="userName">
               @if (this.userName!.invalid) {
                 <mat-error>{{errorMessage5}}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row" *ngIf="renderOption() == 11 || renderOption() == 20">
+          <div class="col-12">
+            <mat-form-field>
+              <mat-label>ID del MEC</mat-label>
+              <input matInput formControlName="userMecId" type="number">
+              @if (this.userMecId!.invalid) {
+                <mat-error>{{errorMessage8}}</mat-error>
               }
             </mat-form-field>
           </div>
@@ -85,13 +104,17 @@
             <mat-checkbox formControlName="userDisabled" class="check-color" class="example-margin">Deshabilitar</mat-checkbox>
           </div>
         </div>
-        <button [disabled]="formGroup.invalid" type="submit" class="btn btn-primary">Crear Usuario</button>
-        <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
+        <button *ngIf="renderOption() == 0" [disabled]="formGroup.invalid" type="submit" class="btn btn-success">Crear Usuario</button>
+        <button *ngIf="renderOption() == 11" [disabled]="formGroup.invalid" type="button" (click)="updateUserByUser()" class="btn btn-warning">Actualizar Usuario</button>
+        <button *ngIf="renderOption() == 11" [disabled]="formGroup.invalid" type="button" (click)="deleteUserByUser()" class="btn btn-danger">Eliminar Usuario</button>
+        <button *ngIf="renderOption() == 20" [disabled]="formGroup.invalid" type="button" (click)="changePassword()" class="btn btn-primary">Cambiar Contraseña</button>
+        <button *ngIf="renderOption() == 20" [disabled]="formGroup.invalid" type="button" (click)="changeEmail()" class="btn btn-primary">Cambiar Correo</button>
       </mat-card-content>
     </mat-card>
   </form>
 </div>
 
+<!-- FORM FOR SEARCH A USER BY USER -->
 <div *ngIf="renderOption() == 1">
   <mat-card class="form">
     <mat-card-content class="container">
@@ -112,3 +135,28 @@
     </mat-card-content>
   </mat-card>
 </div>
+
+<!-- FORM FOR SEARCH A USER BY MEC ID -->
+<div *ngIf="renderOption() == 10">
+  <mat-card class="form">
+    <mat-card-content class="container">
+      <div class="row">
+        <div class="col-9">
+          <mat-form-field>
+            <mat-label>Buscar Usuario Por MEC ID</mat-label>
+            <input matInput [formControl]="userMecIdDos" type="number">
+            @if(this.userMecIdDos.invalid){
+              <mat-error>{{ errorMessage9 }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-3 form-elements">
+          <button type="button" (click)="searchUserByMecId()" class="btn btn-primary">Buscar</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- ALERT MESSAGE -->
+<app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>

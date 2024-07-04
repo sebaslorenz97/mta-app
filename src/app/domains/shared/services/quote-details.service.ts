@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { QuoteDetails, Response } from '../models/model'
+import { QuoteDetail, QuoteDetailsCUD, Response } from '../models/model'
 import { devEnvironment } from '../environments/dev.environment';
 import { TokenService } from '../../shared/services/token.service';
 
@@ -16,8 +16,8 @@ export class QuoteDetailsService {
 
   constructor() { }
 
-  saveQuoteDetails(data: QuoteDetails){
-    return this.httpClient.post<Response>(`${this.apiUrl}/savenewquotedetails`, data, {
+  saveQuoteDetails(data: QuoteDetailsCUD){
+    return this.httpClient.post<Response>(`${this.apiUrl}/saveeditanddeletequotedetailsbydetailid`, data, {
       headers: {
         Authorization: `Bearer ${this.tokenService.getToken()}`
       }

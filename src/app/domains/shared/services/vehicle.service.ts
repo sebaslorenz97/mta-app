@@ -25,7 +25,31 @@ export class VehicleService {
      });
   }
 
-  searchVehiclesByCustomer(customer: string | null){
+  updateVehicleByPlate(data: Vehicle){
+    return this.httpClient.put<Response>(`${this.apiUrl}/editvehiclebyplate`, data, {
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+     });
+  }
+
+  deleteVehicleByPlate(vehiclePlateDos: string){
+    return this.httpClient.delete<Response>(`${this.apiUrl}/removevehiclebyplate/${vehiclePlateDos}`, {
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+     });
+  }
+
+  searchVehicleByPlate(vehiclePlateDos: string | null){
+    return this.httpClient.get<Response>(`${this.apiUrl}/getvehiclebyplate/${vehiclePlateDos}`,{
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+    })
+  }
+
+  searchCustomerVehicles(customer: string | null){
     return this.httpClient.get<Response>(`${this.apiUrl}/getcustomervehiclesbycustomername/${customer}`,{
       headers: {
         Authorization: `Bearer ${this.tokenService.getToken()}`

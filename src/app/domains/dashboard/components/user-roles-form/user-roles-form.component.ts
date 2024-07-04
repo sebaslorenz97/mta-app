@@ -1,9 +1,11 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, ViewChild, inject, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common'
+import { Router } from '@angular/router'
 
 //My documents
 import { UserRole } from '../../../shared/models/model';
 import { UserRolesService } from '../../../shared/services/user-roles.service';
+import { GeneralServiceService } from '../../../shared/services/general-service.service'
 import { AlertModalComponent } from '../../../shared/alert-modal/alert-modal/alert-modal.component'
 
 //Imports for Angular Material
@@ -12,6 +14,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 //Imports for Reactive Forms
 import {ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormGroupDirective} from '@angular/forms';
@@ -24,14 +27,19 @@ import {merge, mergeWith, Observable} from 'rxjs';
 @Component({
   selector: 'app-user-roles-form',
   standalone: true,
-  imports: [MatInputModule, MatSelectModule, MatFormFieldModule, MatCardModule, MatIconModule, ReactiveFormsModule, CommonModule, AlertModalComponent],
+  imports: [MatInputModule, MatSelectModule, MatFormFieldModule, MatCardModule, MatIconModule, ReactiveFormsModule, CommonModule, AlertModalComponent, MatCheckboxModule],
   templateUrl: './user-roles-form.component.html',
   styleUrl: './user-roles-form.component.css'
 })
 
 
-export class UserRolesFormComponent {
+export class UserRolesFormComponent implements OnInit {
 
+  //OTHER VARIABLES
+  private generalServiceService = inject(GeneralServiceService);
+  renderOption = this.generalServiceService.renderOption;
+
+  //VARIABLES FOR ASSIGN USER'S ROLES
   formGroup!: FormGroup;
   errorMessage1 = 'Este campo es requerido';
   errorMessage2 = 'Este campo es requerido';
@@ -40,7 +48,11 @@ export class UserRolesFormComponent {
   @ViewChild(FormGroupDirective)
   private formDir!: FormGroupDirective;
 
-  constructor(private formBuilder: FormBuilder) {
+  //VARIABLES FOR ASSIGN AND UNASSIGN USER'S ROLES
+  @Input() user?: string | undefined;
+  @Input() userRolesData?: string[] | undefined;
+
+  constructor(private formBuilder: FormBuilder, private router: Router) {
     this.buildForm()
 
     let observable2 = this.formGroup.statusChanges;
@@ -50,11 +62,38 @@ export class UserRolesFormComponent {
       .subscribe(() => this.updateErrorMessage());
   }
 
-  //METHODS FOR FORMGROUP
+  ngOnInit(): void {
+    if(this.renderOption() === 11 || this.renderOption() === 20){
+      this.userPkFk!.setValue(this.user);
+      this.userPkFk!.disable();
+
+      if(this.userRolesData != null){
+        if(this.userRolesData![0] != undefined){
+          this.adminRole!.setValue(true);
+        }
+        if(this.userRolesData![1] != undefined){
+          this.employeeRole!.setValue(true);
+        }
+        if(this.userRolesData![2] != undefined){
+          this.managerRole!.setValue(true);
+        }
+      }
+      if(this.renderOption()===20){
+        this.adminRole!.disable();
+        this.employeeRole!.disable();
+        this.managerRole!.disable();
+      }
+      console.log(this.formGroup.value);
+    }
+  }
+
+  //METHODS FOR ASSIGN USER'S ROLES FORMGROUP
   private buildForm(){
     this.formGroup = this.formBuilder.group({
-      roleUserPk: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
-      userPkFk: ['', [Validators.required]]
+      userPkFk: ['', [Validators.required]],
+      adminRole: [false],
+      employeeRole: [false],
+      managerRole: [false]
     })
   }
 
@@ -62,23 +101,41 @@ export class UserRolesFormComponent {
     this.formDir.resetForm();
   }
 
-  //METHODS FOR SERVICE
+  //SERVICE FOR ASSIGN USER'S ROLES
   private userRolesService = inject(UserRolesService);
 
   saveFormGroup(event: Event){
-    console.log(this.formGroup.value)
-    const userRole: UserRole = this.formGroup.value;
+    let userRole: UserRole = this.formGroup.value;
+
+    if(this.user != undefined){
+      userRole.userPkFk = this.user!;
+    }
+
+    if(this.userRolesData != undefined){
+      if(!this.adminRole!.touched && this.userRolesData![0] != undefined){
+        userRole.adminRole = true;
+      }
+      if(!this.employeeRole!.touched && this.userRolesData![1] != undefined){
+        userRole.managerRole = true;
+      }
+      if(!this.managerRole!.touched && this.userRolesData![2] != undefined){
+        userRole.employeeRole = true;
+      }
+    }
 
     const orderDate = new Date();
     userRole.roleUserGrantedDate = this.formatDate(orderDate);
+
     console.log(userRole);
 
     this.userRolesService.assignUserRole(userRole)
       .subscribe({
         next: response => {
-          console.log(response.cb)
-          this.alertMessage = `${response.message}. El role: ${response.urb.roleUserPk} fue asignado al usuario ${response.urb.userPkFk}`;
-          this.cleanFormGroup();
+          if(response.roleAssignmentOperationResult != ''){
+            this.alertMessage = `${response.roleAssignmentOperationResult}`;
+          }else{
+            this.alertMessage = 'No hubo cambios en los roles'
+          }
         },
         error: error => {
           this.alertMessage = error.error.message;
@@ -95,13 +152,6 @@ export class UserRolesFormComponent {
 
   //METHODS FOR VALIDATIONS
   updateErrorMessage() {
-    //UPDATE MESSAGE FOR ROLE NAME
-    if (this.roleUserPk!.hasError('required')) {
-      this.errorMessage1 = 'Este campo es requerido';
-    }else if (this.roleUserPk!.hasError('pattern')) {
-      this.errorMessage1 = 'Porfavor ingresa un role valido';
-    }
-
     //UPDATE MESSAGE FOR ROLE USER
     if (this.userPkFk!.hasError('required')) {
       this.errorMessage2 = 'Este campo es requerido';
@@ -111,12 +161,20 @@ export class UserRolesFormComponent {
   }
 
   //GETTERS
-  get roleUserPk(){
-    return this.formGroup.get('roleUserPk');
-  }
-
   get userPkFk(){
     return this.formGroup.get('userPkFk');
+  }
+
+  get adminRole(){
+    return this.formGroup.get('adminRole');
+  }
+
+  get employeeRole(){
+    return this.formGroup.get('employeeRole');
+  }
+
+  get managerRole(){
+    return this.formGroup.get('managerRole');
   }
 
 }

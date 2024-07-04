@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { tap } from 'rxjs/operators';
 
-import { Login } from '../models/model'
+import { Response } from '../models/model'
 import { TokenService } from '../../shared/services/token.service';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class AuthService {
   constructor() { }
 
   login(userName: string, userPassword: string){
-    return this.httpClient.post('http://localhost:8080/mi-taller-automotriz/auth/login', {
+    return this.httpClient.post<Response>('http://localhost:8080/mi-taller-automotriz/auth/login', {
       userPk: userName,
       userPassword: userPassword
     }, {observe: 'response'})

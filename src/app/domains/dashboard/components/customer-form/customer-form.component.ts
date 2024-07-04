@@ -1,10 +1,11 @@
 //Other Imports
-import { Component, ViewChild, inject} from '@angular/core';
+import { Component, ViewChild, inject, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'
 
 //Local imports
 //Components
-import { CreateCustomerDTO } from '../../../shared/models/model';
+import { CreateCustomerDTO, Customer } from '../../../shared/models/model';
 //Services
 import { CustomerService } from '../../../shared/services/customer.service';
 import { GeneralServiceService } from '../../../shared/services/general-service.service'
@@ -17,6 +18,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatDividerModule} from '@angular/material/divider';
 
 //Imports for Reactive Forms
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormControl, FormGroupDirective } from '@angular/forms';
@@ -29,13 +31,13 @@ import {merge} from 'rxjs';
 @Component({
   selector: 'app-customer-form',
   standalone: true,
-  imports: [MatSelectModule, MatInputModule, MatFormFieldModule, MatCardModule, MatCheckboxModule, ReactiveFormsModule, AlertModalComponent, CommonModule],
+  imports: [MatDividerModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatCardModule, MatCheckboxModule, ReactiveFormsModule, AlertModalComponent, CommonModule],
   templateUrl: './customer-form.component.html',
   styleUrl: './customer-form.component.css'
 })
 
 
-export class CustomerFormComponent {
+export class CustomerFormComponent implements OnInit {
 
   //OTHER VARIABLES
   private generalServiceService = inject(GeneralServiceService);
@@ -61,10 +63,14 @@ export class CustomerFormComponent {
   customerNameDos = new FormControl('', [Validators.required]);
   errorMessage10 = 'Este campo es requerido';
 
-  constructor(private formBuilder: FormBuilder){
-    this.buildForm();
+  //VARIABLES FOR UPDATE USER
+  @Input() customerData?: Customer | undefined;
 
-    this.customerReference!.disable();
+  constructor(private formBuilder: FormBuilder, private router: Router){
+    this.buildForm();
+    if(this.renderOption() === 2){
+      this.customerReference!.disable();
+    }
 
     let observable2 = this.formGroup.statusChanges;
     //let observable2 = this.customerName!.statusChanges;
@@ -77,6 +83,29 @@ export class CustomerFormComponent {
       .subscribe(() => this.updateErrorMessage());
     this.customerName!.valueChanges.pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorMessage());*/
+  }
+
+  ngOnInit(): void {
+    if(this.renderOption() === 13){
+      this.customerNameDos!.setValue(this.customerData!.customerName);
+      this.customerNameDos!.disable();
+
+      this.customerName!.setValue(this.customerData!.customerName);
+      this.customerParticularEmpresa!.setValue(this.customerData!.customerPrivateEnterprise);
+      if(this.customerData?.customerReference != 'N/A'){
+        this.customerReference!.setValue(this.customerData!.customerReference);
+      }else{
+        this.customerReference!.setValue('');
+        this.customerReference!.disable();
+      }
+      this.customerRfc!.setValue(this.customerData!.customerRfcKey);
+      this.customerCp!.setValue(this.customerData!.customerCp);
+      this.customerEmail!.setValue(this.customerData!.customerEmail);
+      this.customerPhoneNumber!.setValue(this.customerData!.customerPhoneNumber);
+      this.stateNameFk!.setValue(this.customerData!.customerStateNameFk);
+      this.municipalityNameFk!.setValue(this.customerData!.customerMunicipalityNameFk);
+      console.log(this.formGroup.value);
+    }
   }
 
   //METHODS FOR CREATE A CUSTOMER'S FORMGROUP
@@ -111,7 +140,6 @@ export class CustomerFormComponent {
   private customerService = inject(CustomerService);
 
   saveFormGroup(event: Event){
-    console.log('ENTRO AL SAVE GROUP')
     console.log(this.formGroup.value)
     const customer: CreateCustomerDTO = this.formGroup.value;
     console.log(customer)
@@ -139,6 +167,49 @@ export class CustomerFormComponent {
   //SERVICE METHOD FOR SEARCH A CUSTOMER BY NAME
   searchCustomerByName(){
     console.log(this.customerNameDos)
+    this.router.navigate(['dashboard/rud-customer',this.customerNameDos.value])
+      .catch(error => {
+        this.alertMessage = error.error.message;
+      })
+  }
+
+  //SERVICE METHOD FOR UPDATE BY USERNAME
+  updateCustomerByName(){
+    const customer: Customer = this.formGroup.value;
+    customer.newCustomerName = this.formGroup.get('customerName')!.value;
+    customer.customerParticularEmpresa = this.formGroup.get('customerParticularEmpresa')!.value;
+    customer.customerName = this.customerNameDos.value;
+    if(!this.customerReference?.touched){
+      customer.customerReference = 'N/A';
+    }
+    console.log(customer)
+
+    this.customerService.updateCustomerByName(customer)
+      .subscribe({
+        next: response => {
+          console.log(response)
+          this.alertMessage = `${response.message}`;
+        },
+        error: error => {
+          this.alertMessage = error.error.message;
+        }
+      })
+  }
+
+  //SERVICE METHOD FOR DELETE BY USERNAME
+  deleteCustomerByName(){
+    const customer: string = this.customerData!.customerName!;
+    this.customerService.deleteCustomerByName(customer)
+      .subscribe({
+        next: response => {
+          console.log(response)
+          this.alertMessage = `${response.message}`;
+          this.cleanFormGroup();
+        },
+        error: error => {
+          this.alertMessage = 'No se puede eliminar porque pueden haber Vehiculos o Cotizaciones del cliente. Si quiere eliminarlo primero elimine los elementos dependientes';
+        }
+      })
   }
 
 

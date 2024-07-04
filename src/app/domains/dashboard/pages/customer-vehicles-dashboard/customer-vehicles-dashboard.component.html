@@ -1,5 +1,5 @@
-<div class="row">
-  <div class="col-10 bg-light">
+<div class="row d-flex justify-content-center">
+  <div class="col-12 bg-light">
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
 
@@ -51,7 +51,7 @@
                      showFirstLastButtons
                      aria-label="Select page of customer vehicle elements">
       </mat-paginator>
-      <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
     </div>
   </div>
 </div>
+<app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>

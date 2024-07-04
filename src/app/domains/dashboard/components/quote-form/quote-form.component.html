@@ -1,7 +1,19 @@
-<div *ngIf="renderOption() == 7">
+<!-- FORM FOR CREATE OR UPDATE OR DELETE A QUOTE -->
+<div *ngIf="renderOption() == 7 || renderOption() == 18">
   <form [formGroup]="formGroup" (ngSubmit)="saveFormGroup($event)">
     <mat-card class="form">
       <mat-card-content class="container">
+        <div class="row" *ngIf="renderOption() == 18">
+          <div class="col-12">
+            <mat-form-field>
+              <mat-label>Cotizacion</mat-label>
+              <input matInput [formControl]="quoteId">
+              @if (this.vehiclePlate!.invalid) {
+                <mat-error>{{errorMessage1}}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
         <div class="row">
           <div class="col-12">
             <mat-form-field>
@@ -64,8 +76,9 @@
             </mat-form-field>
           </div>
         </div>
-        <button [disabled]="formGroup.invalid" type="submit" class="btn btn-primary">Crear Cotizacion</button>
-        <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
+        <button *ngIf="renderOption() == 7" [disabled]="formGroup.invalid" type="submit" class="btn btn-success">Crear Cotizacion</button>
+        <button *ngIf="renderOption() == 18" [disabled]="formGroup.invalid" type="button" (click)="updateQuoteById()" class="btn btn-warning">Actualizar Cotizacion</button>
+        <button *ngIf="renderOption() == 18" [disabled]="formGroup.invalid" type="button" (click)="deleteQuoteAndDetailsById()" class="btn btn-danger">Eliminar Cotizacion</button>
       </mat-card-content>
     </mat-card>
   </form>
@@ -79,7 +92,7 @@
         <div class="col-9">
           <mat-form-field>
             <mat-label>Buscar Cotizacion Por ID</mat-label>
-            <input matInput [formControl]="quoteId">
+            <input matInput [formControl]="quoteId" type="number">
             @if(this.quoteId.invalid){
               <mat-error>{{ errorMessage5 }}</mat-error>
             }
@@ -115,3 +128,6 @@
     </mat-card-content>
   </mat-card>
 </div>
+
+<!-- ALERT MESSAGE -->
+<app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>

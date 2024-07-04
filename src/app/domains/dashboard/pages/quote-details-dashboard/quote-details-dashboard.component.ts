@@ -23,7 +23,6 @@ export class QuoteDetailsDashboardComponent implements AfterViewInit, OnInit {
   dataSource!: MatTableDataSource<QuoteDetailForTable>;
 
   constructor(private route: ActivatedRoute) {
-    console.log('ESTAMOS EN EL QUOTE DETAILS CONSTRUCTOR')
    }
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

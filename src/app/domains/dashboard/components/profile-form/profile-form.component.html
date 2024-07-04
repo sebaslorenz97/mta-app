@@ -1,29 +1,66 @@
-<mat-card class="form">
-  <mat-card-content class="container">
-    <div class="row">
-      <div class="col-12">
-        <mat-form-field>
-          <mat-label>Contraseña nueva</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <mat-form-field>
-          <mat-label>Confirma la contraseña</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <mat-form-field>
-          <mat-label>Correo nuevo</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Crear Cliente</button>
-  </mat-card-content>
-</mat-card>
+<form [formGroup]="formGroup">
+  <div class="col-5 form-rendered-4 bg-light">
+    <mat-card class="form">
+      <mat-card-content class="container">
+        <div class="row" *ngIf="renderOption() == 21">
+          <div class="col-12">
+            <mat-form-field>
+              <mat-label>Escribe contraseña actual</mat-label>
+              <input matInput [type]="hide ? 'password' : 'text'" formControlName="myCurrentUserPassword">
+              <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+              @if (this.myCurrentUserPassword!.invalid) {
+                <mat-error>{{errorMessage4}}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row" *ngIf="renderOption() == 21">
+          <div class="col-12">
+            <mat-form-field>
+              <mat-label>Escribe una contraseña nueva</mat-label>
+              <input matInput [type]="hide ? 'password' : 'text'" formControlName="myUserPassword">
+              <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+              <mat-hint align="start">Min 10 Max 20, Al menos: Una letra mayus y minus, Un digito Y Un caracter admitido(&#36;&#64;&#33;&#37;&#42;&#63;&#38;)</mat-hint>
+              @if (this.myUserPassword!.invalid) {
+                <mat-error>{{errorMessage1}}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12" *ngIf="renderOption() == 21">
+            <mat-form-field>
+              <mat-label>Confirma la contraseña</mat-label>
+              <input matInput [type]="hide ? 'password' : 'text'" formControlName="myUserPasswordConfirmation">
+              <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+              @if (this.myUserPasswordConfirmation!.invalid) {
+                <mat-error>{{errorMessage2}}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row" *ngIf="renderOption() === 22">
+          <div class="col-12">
+            <mat-form-field>
+              <mat-label>Escribe un correo nuevo</mat-label>
+              <input type="email" matInput formControlName="myUserEmail">
+              @if (this.myUserEmail!.invalid) {
+                <mat-error>{{errorMessage3}}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+        <button *ngIf="renderOption() == 21" [disabled]="formGroup.invalid" type="button" class="btn btn-warning" (click)="updatePassword()">Confirmar Cambio</button>
+        <button *ngIf="renderOption() == 22" [disabled]="formGroup.invalid" type="button" class="btn btn-warning" (click)="updateEmail()">Confirmar Cambio</button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</form>
+
+<app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>

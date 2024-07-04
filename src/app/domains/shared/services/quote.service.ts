@@ -25,6 +25,30 @@ export class QuoteService {
      });
   }
 
+  updateQuoteById(data: Quote){
+    return this.httpClient.put<Response>(`${this.apiUrl}/editquotebyid`, data, {
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+     });
+  }
+
+  deleteQuoteAndDetailsById(quoteId: string){
+    return this.httpClient.delete<Response>(`${this.apiUrl}/removequotebyid/${quoteId}`, {
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+     });
+  }
+
+  searchQuoteAndDetailsById(quoteId: string | null){
+    return this.httpClient.get<Response>(`${this.apiUrl}/getquotebyid/${quoteId}`,{
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+    })
+  }
+
   searchQuotesByPlate(vehiclePlate: string | null){
     return this.httpClient.get<Response>(`${this.apiUrl}/searchvehiclequotesbyvehicleplate/${vehiclePlate}`,{
       headers: {

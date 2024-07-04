@@ -1,68 +1,72 @@
-<form [formGroup]="formGroup" (ngSubmit)="saveFormGroup()">
-  <mat-card class="form">
-    <mat-card-content class="container">
+<div *ngIf="renderOption() == 7 || renderOption() == 18">
+  <form [formGroup]="formGroup" (ngSubmit)="saveUpdateAndDeleteDetails()">
+    <mat-card class="form">
+      <mat-card-content class="container">
 
-      <mat-form-field>
-        <mat-label>ID Cotizacion</mat-label>
-        <input matInput [formControl]="quoteDetailIdFk">
-        @if (this.quoteDetailIdFk!.invalid) {
-          <mat-error>{{errorMessage1}}</mat-error>
-        }
-      </mat-form-field>
-      <button [disabled]="quoteDetailIdFk.invalid" (click)="addDetail()" type="button" class="btn btn-primary">Agregar detalle</button>
+        <mat-form-field>
+          <mat-label>ID Cotizacion</mat-label>
+          <input matInput [formControl]="quoteDetailIdFk">
+          @if (this.quoteDetailIdFk!.invalid) {
+            <mat-error>{{errorMessage1}}</mat-error>
+          }
+        </mat-form-field>
+        <button [disabled]="quoteDetailIdFk.invalid" (click)="addDetail()" type="button" class="btn btn-primary">Agregar detalle</button>
 
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-        <ng-container formArrayName="lqdb">
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+          <ng-container formArrayName="lqdb">
+          <!--- Note that these columns can be defined in any order.
+                The actual rendered columns are set as a property on the row definition" -->
 
-        <!-- MEC Column -->
-        <ng-container matColumnDef="quoteDetailMecId">
-          <th mat-header-cell *matHeaderCellDef class="mec"> MEC </th>
-          <td mat-cell *matCellDef="let element" [formGroup]="element" class="mec">
-            <mat-form-field style="width: 100%;" >
-              <input matInput type="number" placeholder="Mec ID" formControlName="quoteDetailMecId">
-            </mat-form-field>
-          </td>
+          <!-- MEC Column -->
+          <ng-container matColumnDef="quoteDetailMecId">
+            <th mat-header-cell *matHeaderCellDef class="mec"> MEC </th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element" class="mec">
+              <mat-form-field style="width: 100%;" >
+                <input matInput type="number" placeholder="Mec ID" formControlName="quoteDetailMecId">
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <!-- Mano de Obra/Refacciones Column -->
+          <ng-container matColumnDef="quoteDetailLabour">
+            <th mat-header-cell *matHeaderCellDef class="labour-repair"> Mano de Obra/Refacciones </th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element" class="labour-repair">
+              <mat-form-field style="width: 100%;">
+                <input matInput placeholder="Mano de obra o refaccion" formControlName="quoteDetailLabour">
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <!-- Importe Column -->
+          <ng-container matColumnDef="quoteDetailAmount">
+            <th mat-header-cell *matHeaderCellDef class="amount"> Importe </th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element" class="amount">
+              <mat-form-field floatLabel="always" style="width: 100%;">
+                <input matInput type="number" class="example-right-align" formControlName="quoteDetailAmount">
+                <span matTextPrefix>$&nbsp;</span>
+                <span matTextSuffix>.00</span>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <!-- Eliminar Column -->
+          <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef class="delete"> - </th>
+            <td mat-cell *matCellDef="let element; index as i" [formGroup]="element" class="delete">
+              <button (click)="deleteDetail(i)" type="button" class="btn btn-primary">Eliminar</button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </ng-container>
+        </table>
 
-        <!-- Mano de Obra/Refacciones Column -->
-        <ng-container matColumnDef="quoteDetailLabour">
-          <th mat-header-cell *matHeaderCellDef class="labour-repair"> Mano de Obra/Refacciones </th>
-          <td mat-cell *matCellDef="let element" [formGroup]="element" class="labour-repair">
-            <mat-form-field style="width: 100%;">
-              <input matInput placeholder="Mano de obra o refaccion" formControlName="quoteDetailLabour">
-            </mat-form-field>
-          </td>
-        </ng-container>
+        <button *ngIf="renderOption() == 7" [disabled]="formGroup.invalid" type="submit" class="btn btn-success">Guardar Detalles</button>
+        <button *ngIf="renderOption() == 18" [disabled]="formGroup.invalid" type="button" class="btn btn-warning" (click)="saveUpdateAndDeleteDetails()">Actualizar Detalles</button>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>
 
-        <!-- Importe Column -->
-        <ng-container matColumnDef="quoteDetailAmount">
-          <th mat-header-cell *matHeaderCellDef class="amount"> Importe </th>
-          <td mat-cell *matCellDef="let element" [formGroup]="element" class="amount">
-            <mat-form-field floatLabel="always" style="width: 100%;">
-              <input matInput type="number" class="example-right-align" formControlName="quoteDetailAmount">
-              <span matTextPrefix>$&nbsp;</span>
-              <span matTextSuffix>.00</span>
-            </mat-form-field>
-          </td>
-        </ng-container>
-
-        <!-- Eliminar Column -->
-        <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef class="delete"> - </th>
-          <td mat-cell *matCellDef="let element; index as i" [formGroup]="element" class="delete">
-            <button (click)="deleteDetail(i)" type="button" class="btn btn-primary">Eliminar</button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </ng-container>
-      </table>
-
-      <button [disabled]="formGroup.invalid" type="submit" class="btn btn-primary">Guardar Detalles</button>
-      <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
-    </mat-card-content>
-  </mat-card>
-</form>
+<app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>

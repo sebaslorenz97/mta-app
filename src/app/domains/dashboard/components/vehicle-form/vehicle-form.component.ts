@@ -1,10 +1,10 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'
 
 //Local imports
 //Components
-import { CreateVehicleDTO } from '../../../shared/models/model';
+import { CreateVehicleDTO, Vehicle} from '../../../shared/models/model';
 //Services
 import { VehicleService } from '../../../shared/services/vehicle.service';
 import { GeneralServiceService } from '../../../shared/services/general-service.service'
@@ -34,7 +34,7 @@ import {merge, finalize} from 'rxjs';
 })
 
 
-export class VehicleFormComponent {
+export class VehicleFormComponent implements OnInit{
 
   //OTHER VARIABLES
   private generalServiceService = inject(GeneralServiceService);
@@ -58,6 +58,9 @@ export class VehicleFormComponent {
   vehiclePlateDos = new FormControl('', [Validators.required]);
   errorMessage8 = 'Este campo es requerido';
 
+  //VARIABLES FOR UPDATE VEHICLE
+  @Input() vehicleData?: Vehicle | undefined;
+
   //VARIABLES FOR SEARCH CUSTOMER'S VEHICLES
   customerName = new FormControl('', [Validators.required]);
 
@@ -71,6 +74,23 @@ export class VehicleFormComponent {
       .subscribe(() => this.updateErrorMessage());
   }
 
+  ngOnInit(): void {
+    if(this.renderOption() === 15){
+      this.vehiclePlateDos!.setValue(this.vehicleData!.vehiclePlate);
+      this.vehiclePlateDos!.disable();
+
+      this.vehiclePlate!.setValue(this.vehicleData!.vehiclePlate);
+      this.vehicleColor!.setValue(this.vehicleData!.vehicleColor);
+      this.vehicleMillage!.setValue(this.vehicleData!.vehicleMillage);
+      this.customerNameFk!.setValue(this.vehicleData!.customerNameFk);
+      this.vehicleLineNameFk!.setValue(this.vehicleData!.vehicleLineNameFk);
+      this.vehicleModelNameFk!.setValue(this.vehicleData!.vehicleModelNameFk);
+      console.log('VEHICLE YEAR ----------------> '+ this.vehicleData!.vehicleYearValueFk)
+      this.vehicleYearValueFk!.setValue(this.vehicleData!.vehicleYearValueFk.toString());
+      console.log(this.formGroup.value);
+    }
+  }
+
   //METHODS FOR CREATE A VEHICLE'S FORMGROUP
   private buildForm(){
     this.formGroup = this.formBuilder.group({
@@ -80,7 +100,7 @@ export class VehicleFormComponent {
       customerNameFk: ['', [Validators.required]],
       vehicleLineNameFk: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
       vehicleModelNameFk: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
-      vehicleYearValueFk: ['', [Validators.required, Validators.pattern(/^[0-9]{4}$/)]]
+      vehicleYearValueFk: [, [Validators.required, Validators.pattern(/^[0-9]{4}$/)]]
     })
   }
 
@@ -111,6 +131,44 @@ export class VehicleFormComponent {
   //SERVICE METHOD FOR SEARCH A VEHICLE BY PLATE
   searchVehicleByPlate(){
     console.log(this.vehiclePlateDos);
+    this.router.navigate(['dashboard/rud-vehicle',this.vehiclePlateDos.value])
+      .catch(error => {
+        this.alertMessage = error.error.message;
+      })
+  }
+
+  //SERVICE METHOD FOR UPDATE BY USERNAME
+  updateVehicleByPlate(){
+    const vehicle: Vehicle = this.formGroup.value;
+    vehicle.newVehiclePlate = this.formGroup.get('vehiclePlate')!.value;
+    console.log(vehicle)
+
+    this.vehicleService.updateVehicleByPlate(vehicle)
+      .subscribe({
+        next: response => {
+          console.log(response)
+          this.alertMessage = `${response.message}`;
+        },
+        error: error => {
+          this.alertMessage = error.error.message;
+        }
+      })
+  }
+
+  //SERVICE METHOD FOR DELETE BY USERNAME
+  deleteVehicleByPlate(){
+    const vehicle: string = this.vehicleData!.vehiclePlate!;
+    this.vehicleService.deleteVehicleByPlate(vehicle)
+      .subscribe({
+        next: response => {
+          console.log(response)
+          this.alertMessage = `${response.message}`;
+          this.cleanFormGroup();
+        },
+        error: error => {
+          this.alertMessage = 'No se puede eliminar porque pueden haber Cotizaciones para ese vehiculo. Si quiere eliminarlo primero elimine los elementos dependientes';
+        }
+      })
   }
 
   //SERVICE METHOD FOR SEARCH CUSTOMER'S VEHICLES

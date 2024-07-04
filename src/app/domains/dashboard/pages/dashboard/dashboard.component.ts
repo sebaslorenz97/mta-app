@@ -1,25 +1,25 @@
-import { Component, inject, signal } from '@angular/core';
+/*import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'
 
 import { ProfileFormComponent } from '../../../dashboard/components/profile-form/profile-form.component'
-import { DashboardNavbarComponent } from '../../../shared/components/dashboard-navbar/dashboard-navbar.component';
-import { SearchFormComponent } from '../../../dashboard/components/search-form/search-form.component';
+
+import { AuthService } from '../../../shared/services/auth.service'*/
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterOutlet, ActivatedRoute } from '@angular/router'
+
+import { User } from '../../../shared/models/model'
+import { AuthService } from '../../../shared/services/auth.service'
+import { GeneralServiceService } from '../../../shared/services/general-service.service'
+
 import { UserFormComponent } from '../../../dashboard/components/user-form/user-form.component'
 import { UserRolesFormComponent } from '../../../dashboard/components/user-roles-form/user-roles-form.component';
-import { CustomerFormComponent } from '../../../dashboard/components/customer-form/customer-form.component';
-import { QuoteFormComponent } from '../../../dashboard/components/quote-form/quote-form.component'
-import { QuoteDetailsFormComponent } from '../../../dashboard/components/quote-details-form/quote-details-form.component'
-import { VehicleFormComponent } from '../../../dashboard/components/vehicle-form/vehicle-form.component'
-
-import { CreateCustomerDTO } from '../../../shared/models/model';
-import { GeneralServiceService } from '../../../shared/services/general-service.service';
-import { AuthService } from '../../../shared/services/auth.service'
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ProfileFormComponent, DashboardNavbarComponent, UserFormComponent, UserRolesFormComponent, CustomerFormComponent, QuoteFormComponent, SearchFormComponent, QuoteDetailsFormComponent, VehicleFormComponent],
+  imports: [UserFormComponent, UserRolesFormComponent, CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -27,35 +27,32 @@ import { AuthService } from '../../../shared/services/auth.service'
 
 export class DashboardComponent {
 
+  //OTHER VARIABLES
   private generalServiceService = inject(GeneralServiceService);
+  renderOption = this.generalServiceService.renderOption;
+
+  userData!: User;
+  userRolesData!: string[];
+
   private authService = inject(AuthService);
 
-  constructor(private router: Router) {
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
-  }
-
-  //renderOption = this.generalServiceService.renderOption;
-
-  customer = signal<CreateCustomerDTO>({
-    stateNameFk: "Queretaro",
-    municipalityNameFk: "El Marques",
-    customerName: "Fernando Ortega",
-    customerParticularEmpresa: false,
-    customerReference:"",
-    customerRfc: "LOSD971126",
-    customerCp: "32233",
-    customerEmail: "fernando.ort.98gmail.com",
-    customerPhoneNumber: "4425337687"
-  });
-
-  receiveCustomerInfoHandler(customer: CreateCustomerDTO){
-    console.log('Info recibida desde padre');
-    //customer();
+  ngOnInit(): void {
+    if(this.renderOption() === 20){
+      console.log(this.route.snapshot.data['userAndRoles']);
+      this.userData = this.route.snapshot.data['userAndRoles'].ub;
+      this.userRolesData = this.route.snapshot.data['userAndRoles'].roles;
+      console.log('---------------- User Data ----------------');
+      console.log(this.userData);
+      console.log('---------------- Roles Data ----------------');
+      console.log(this.userRolesData);
+    }
   }
 
   logout(){
     this.authService.logout();
-    //this.router.navigate(['/login'])
+    this.router.navigate(['/login'])
   }
 
 }

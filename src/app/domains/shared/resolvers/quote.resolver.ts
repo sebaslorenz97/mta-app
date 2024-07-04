@@ -11,3 +11,8 @@ export const quoteResolver: ResolveFn<Response> = (route, state) => {
   route: ActivatedRouteSnapshot
   return inject(QuoteService).searchQuotesByPlate(route.paramMap.get('vehiclePlateDos'));
 };
+
+export const quoteAndDetailsResolver: ResolveFn<Response> = (route, state) => {
+  route: ActivatedRouteSnapshot
+  return inject(QuoteService).searchQuoteAndDetailsById(route.paramMap.get('quoteId'));
+};
