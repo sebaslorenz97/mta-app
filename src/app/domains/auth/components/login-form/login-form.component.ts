@@ -98,7 +98,12 @@ export class LoginFormComponent {
       .subscribe({
         next: response => {
           this.status = 'succed'
-          this.rolesFromAuthentication.set(response.body!.rolesFromAuthentication)
+          this.rolesFromAuthentication.set(response.body!.roles)
+          for(let i=0; i < this.rolesFromAuthentication().length; i++){
+            if(this.rolesFromAuthentication()[i] === 'ROLE_ADMIN'){
+              this.generalServiceService.saveIsAdmin('1')
+            }
+          }
           this.router.navigate(['/dashboard'])
         },
         error: error => {

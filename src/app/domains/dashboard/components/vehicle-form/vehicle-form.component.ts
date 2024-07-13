@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, Input, OnInit } from '@angular/core';
+import { Component, inject, ViewChild, Input, OnInit, AfterViewChecked, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'
 
@@ -6,6 +6,7 @@ import { Router } from '@angular/router'
 //Components
 import { CreateVehicleDTO, Vehicle} from '../../../shared/models/model';
 //Services
+import { CustomerService } from '../../../shared/services/customer.service';
 import { VehicleService } from '../../../shared/services/vehicle.service';
 import { GeneralServiceService } from '../../../shared/services/general-service.service'
 //Others
@@ -16,29 +17,34 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCardModule} from '@angular/material/card';
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 //Imports for Reactive Forms
 import {ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormGroupDirective, FormControl} from '@angular/forms';
 
 //Imports for RXJS
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {merge, finalize} from 'rxjs';
+import {merge, debounceTime} from 'rxjs';
 
 
 @Component({
   selector: 'app-vehicle-form',
   standalone: true,
-  imports: [MatCardModule, MatInputModule, MatFormFieldModule, MatSelectModule, ReactiveFormsModule, AlertModalComponent, CommonModule],
+  imports: [MatCardModule, MatInputModule, MatFormFieldModule, MatSelectModule, MatAutocompleteModule, ReactiveFormsModule, AlertModalComponent, CommonModule],
   templateUrl: './vehicle-form.component.html',
   styleUrl: './vehicle-form.component.css'
 })
 
 
-export class VehicleFormComponent implements OnInit{
+export class VehicleFormComponent implements OnInit, AfterViewChecked{
 
   //OTHER VARIABLES
   private generalServiceService = inject(GeneralServiceService);
   renderOption = this.generalServiceService.renderOption;
+
+  @Input() lines?: string[] | undefined;
+  @Input() models?: string[] | undefined;
+  @Input() years?: string[] | undefined;
 
   //VARIABLES FOR CREATE A VEHICLE
   formGroup!: FormGroup;
@@ -50,6 +56,9 @@ export class VehicleFormComponent implements OnInit{
   errorMessage6 = 'Este campo es requerido';
   errorMessage7 = 'Campo requerido';
   alertMessage: string | null = null;
+  filteredOptionsForLines!:string[] | undefined;
+  filteredOptionsForModels!:string[] | undefined;
+  filteredOptionsForYears!:string[] | undefined;
 
   @ViewChild(FormGroupDirective)
   private formDir!: FormGroupDirective;
@@ -63,6 +72,16 @@ export class VehicleFormComponent implements OnInit{
 
   //VARIABLES FOR SEARCH CUSTOMER'S VEHICLES
   customerName = new FormControl('', [Validators.required]);
+  filteredOptions!:string[] | undefined;
+  initForm(){
+    this.customerName.valueChanges
+    .pipe(debounceTime(1500))
+    .subscribe(response => {
+      console.log('entered data is ', response);
+      this.searchNameOfCustomers();
+    })
+
+  }
 
   constructor(private formBuilder: FormBuilder, private router: Router) {
     this.buildForm()
@@ -74,7 +93,24 @@ export class VehicleFormComponent implements OnInit{
       .subscribe(() => this.updateErrorMessage());
   }
 
+  ngAfterViewChecked(): void {
+    if(this.renderOption() === 6){
+      this.initForm();
+      this.renderOption.set(30);
+    }
+  }
+
   ngOnInit(): void {
+    if(this.lines != undefined){
+      this.filteredOptionsForLines = this.lines;
+    }
+    if(this.models != undefined){
+      this.filteredOptionsForModels = this.models;
+    }
+    if(this.years != undefined){
+      this.filteredOptionsForYears = this.years;
+    }
+
     if(this.renderOption() === 15){
       this.vehiclePlateDos!.setValue(this.vehicleData!.vehiclePlate);
       this.vehiclePlateDos!.disable();
@@ -98,8 +134,8 @@ export class VehicleFormComponent implements OnInit{
       vehicleColor: ['', [Validators.required]],
       vehicleMillage: ['', [Validators.required, Validators.pattern(/^[0-9]{0,6}$/)]],
       customerNameFk: ['', [Validators.required]],
-      vehicleLineNameFk: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
-      vehicleModelNameFk: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ]+$/)]],
+      vehicleLineNameFk: ['', [Validators.required]],
+      vehicleModelNameFk: ['', [Validators.required]],
       vehicleYearValueFk: [, [Validators.required, Validators.pattern(/^[0-9]{4}$/)]]
     })
   }
@@ -193,6 +229,19 @@ export class VehicleFormComponent implements OnInit{
       })*/
   }
 
+  //SERVICE METHOD FOR SEARCH CUSTOMER NAMES
+  private customerService = inject(CustomerService);
+
+  searchNameOfCustomers(){
+    this.customerService.searchNameOfCustomers(this.customerName.value)
+      .subscribe({
+        next: response => {
+          console.log(response.cl)
+          this.filteredOptions = response.cl;
+        }
+      })
+  }
+
   //VALIDATION METHOD FOR CREATE A VEHICLE
   updateErrorMessage() {
     //UPDATE MESSAGE FOR VEHICLE PLATE
@@ -222,15 +271,11 @@ export class VehicleFormComponent implements OnInit{
     //UPDATE MESSAGE FOR VEHICLE LINE
     if (this.vehicleLineNameFk!.hasError('required')) {
       this.errorMessage5 = 'Este campo es requerido';
-    }else if (this.vehicleLineNameFk!.hasError('pattern')) {
-      this.errorMessage5 = 'Porfavor ingresa una marca valida';
     }
 
     //UPDATE MESSAGE FOR VEHICLE MODEL
     if (this.vehicleModelNameFk!.hasError('required')) {
       this.errorMessage6 = 'Este campo es requerido';
-    }else if (this.vehicleModelNameFk!.hasError('pattern')) {
-      this.errorMessage6 = 'Porfavor ingresa un modelo valido';
     }
 
     //UPDATE MESSAGE FOR VEHICLE YEAR

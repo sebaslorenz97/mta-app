@@ -5,13 +5,14 @@ import { QuoteDetailsService } from '../../../shared/services/quote-details.serv
 import { QuoteDetail } from '../../../shared/models/model'
 
 //IMPORTS FOR ANGULAR MATERIAL
+import {MatCardModule} from '@angular/material/card';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 
 @Component({
   selector: 'app-quote-details-dashboard',
   standalone: true,
-  imports: [MatTableModule, MatPaginatorModule, RouterOutlet],
+  imports: [MatTableModule, MatPaginatorModule, MatCardModule, RouterOutlet],
   templateUrl: './quote-details-dashboard.component.html',
   styleUrl: './quote-details-dashboard.component.css'
 })
@@ -21,6 +22,7 @@ export class QuoteDetailsDashboardComponent implements AfterViewInit, OnInit {
   quoteDetailsData!: QuoteDetail[];
   filteredQuoteDetailsData!: QuoteDetailForTable[];
   dataSource!: MatTableDataSource<QuoteDetailForTable>;
+  quote!: string;
 
   constructor(private route: ActivatedRoute) {
    }
@@ -32,6 +34,7 @@ export class QuoteDetailsDashboardComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
+    this.quote = this.route.snapshot.data['quoteDetails'].quote;
     this.quoteDetailsData = this.route.snapshot.data['quoteDetails'].lqdb;
     this.filteredQuoteDetailsData = this.quoteDetailsData.map(({
       quoteDetailMecId,quoteDetailLabour, quoteDetailAmount

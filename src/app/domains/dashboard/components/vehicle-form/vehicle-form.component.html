@@ -58,6 +58,20 @@
         <div class="row">
           <div class="col-4">
             <mat-form-field>
+              <mat-label>
+                Marca:
+              </mat-label>
+              <input formControlName="vehicleLineNameFk" matInput type="text" [matAutocomplete]="auto" />
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let item of filteredOptionsForLines" [value]="item">
+                  {{item}}
+                </mat-option>
+              </mat-autocomplete>
+              @if(this.vehicleLineNameFk!.invalid){
+                <mat-error>{{ errorMessage5 }}</mat-error>
+              }
+            </mat-form-field>
+            <!--<mat-form-field>
               <mat-label>Marca:</mat-label>
               <mat-select formControlName="vehicleLineNameFk">
                 <mat-option value="Nissan">Nissan</mat-option>
@@ -68,10 +82,24 @@
               @if (this.vehicleLineNameFk!.invalid) {
                 <mat-error>{{errorMessage5}}</mat-error>
               }
-            </mat-form-field>
+            </mat-form-field>-->
           </div>
           <div class="col-5">
             <mat-form-field>
+              <mat-label>
+                Modelo:
+              </mat-label>
+              <input formControlName="vehicleModelNameFk" matInput type="text" [matAutocomplete]="auto2" />
+              <mat-autocomplete #auto2="matAutocomplete">
+                <mat-option *ngFor="let item2 of filteredOptionsForModels" [value]="item2">
+                  {{item2}}
+                </mat-option>
+              </mat-autocomplete>
+              @if(this.vehicleModelNameFk!.invalid){
+                <mat-error>{{ errorMessage6 }}</mat-error>
+              }
+            </mat-form-field>
+            <!--<mat-form-field>
               <mat-label>Modelo:</mat-label>
               <mat-select formControlName="vehicleModelNameFk">
                 <mat-option value="Versa Exclusive">Versa Exclusive</mat-option>
@@ -82,10 +110,24 @@
               @if (this.vehicleModelNameFk!.invalid) {
                 <mat-error>{{errorMessage6}}</mat-error>
               }
-            </mat-form-field>
+            </mat-form-field>-->
           </div>
           <div class="col-3">
             <mat-form-field>
+              <mat-label>
+                Año:
+              </mat-label>
+              <input formControlName="vehicleYearValueFk" matInput type="text" [matAutocomplete]="auto3" />
+              <mat-autocomplete #auto3="matAutocomplete">
+                <mat-option *ngFor="let item3 of filteredOptionsForYears" [value]="item3">
+                  {{item3}}
+                </mat-option>
+              </mat-autocomplete>
+              @if(this.vehicleYearValueFk!.invalid){
+                <mat-error>{{ errorMessage7 }}</mat-error>
+              }
+            </mat-form-field>
+            <!--<mat-form-field>
               <mat-label>Año:</mat-label>
               <mat-select formControlName="vehicleYearValueFk">
                 <mat-option value="2021">2021</mat-option>
@@ -96,7 +138,7 @@
               @if (this.vehicleYearValueFk!.invalid) {
                 <mat-error>{{errorMessage7}}</mat-error>
               }
-            </mat-form-field>
+            </mat-form-field>-->
           </div>
         </div>
         <button *ngIf="renderOption() == 4" [disabled]="formGroup.invalid" type="submit" class="btn btn-success">Asignar Auto al Cliente</button>
@@ -130,22 +172,59 @@
 </div>
 
 <!-- FORM FOR SEARCH VEHICLES OF A CUSTOMER BY NAME-->
-<div *ngIf="renderOption() == 6">
+<div *ngIf="renderOption() == 6 || renderOption() == 30">
   <mat-card class="form">
     <mat-card-content class="container">
       <div class="row">
         <div class="col-9">
           <mat-form-field>
-            <mat-label>Buscar Vehiculos Por Nombre de Cliente</mat-label>
-            <input matInput [formControl]="customerName">
+            <mat-label>
+              Buscar Vehiculos Por Nombre de Cliente
+            </mat-label>
+            <input [formControl]="customerName" matInput type="text" [matAutocomplete]="auto" />
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let item of filteredOptions" [value]="item">
+                {{item}}
+              </mat-option>
+            </mat-autocomplete>
             @if(this.customerName.invalid){
               <mat-error>{{ errorMessage8 }}</mat-error>
             }
           </mat-form-field>
+
+          <!--<mat-form-field class="example-full-width">
+            <mat-label>Buscar Vehiculos Por Nombre de Cliente</mat-label>
+            <input type="text"
+                   placeholder="Pick one"
+                   aria-label="Number"
+                   matInput
+                   [formControl]="customerName"
+                   [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+              @for (option of filteredOptions | async; track option) {
+                <mat-option [value]="option">{{option}}</mat-option>
+              }
+            </mat-autocomplete>
+            @if(this.customerName.invalid){
+              <mat-error>{{ errorMessage8 }}</mat-error>
+            }
+          </mat-form-field>-->
+
+          <!--<mat-form-field>
+            <mat-label>Buscar Vehiculos Por Nombre de Cliente</mat-label>
+            <input matInput [formControl]="customerName" [matAutocomplete]="auto">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+              @for (option of filteredOptions | async; track option) {
+                <mat-option [value]="option">{{option}}</mat-option>
+              }
+            </mat-autocomplete>
+            @if(this.customerName.invalid){
+              <mat-error>{{ errorMessage8 }}</mat-error>
+            }
+          </mat-form-field>-->
         </div>
         <div class="col-3 form-elements">
           <button [disabled]="customerName.invalid" type="button" (click)="searchVehiclesByCustomer()" class="btn btn-primary">Buscar</button>
-          <app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>
         </div>
       </div>
     </mat-card-content>

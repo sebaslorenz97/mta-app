@@ -25,6 +25,7 @@ export class DashboardLayoutComponent {
 
   logout(){
     this.authService.logout();
+    this.generalServiceService.removeIsAdmin();
     this.router.navigate(['/login'])
   }
 

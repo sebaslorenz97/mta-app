@@ -8,13 +8,14 @@ import { Vehicle } from '../../../shared/models/model'
 import { AlertModalComponent } from '../../../shared/alert-modal/alert-modal/alert-modal.component'
 
 //IMPORTS FOR ANGULAR MATERIAL
+import {MatCardModule} from '@angular/material/card';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 
 @Component({
   selector: 'app-customer-vehicles-dashboard',
   standalone: true,
-  imports: [MatTableModule, MatPaginatorModule, RouterOutlet, AlertModalComponent, CommonModule],
+  imports: [MatTableModule, MatPaginatorModule, MatCardModule, RouterOutlet, AlertModalComponent, CommonModule],
   templateUrl: './customer-vehicles-dashboard.component.html',
   styleUrl: './customer-vehicles-dashboard.component.css'
 })
@@ -27,6 +28,7 @@ export class CustomerVehiclesDashboardComponent implements AfterViewInit, OnInit
   dataSource!: MatTableDataSource<VehicleForTable>;
   clickedRows = new Set<VehicleForTable>();
   alertMessage: string | null = null;
+  customer!: string;
 
   /*constructor(_activatedRoute: ActivatedRoute) {
     this.vehicleData.set(this.vehicleService.vehicleData());
@@ -53,6 +55,7 @@ export class CustomerVehiclesDashboardComponent implements AfterViewInit, OnInit
   }
 
   ngOnInit(): void {
+    this.customer = this.route.snapshot.data['customerVehicles'].customer;
     this.vehicleData = this.route.snapshot.data['customerVehicles'].lvb;
     this.filteredVehicleData = this.vehicleData.map(({
       vehiclePlate,vehicleColor, vehicleMillage, vehicleLineNameFk, vehicleModelNameFk, vehicleYearValueFk

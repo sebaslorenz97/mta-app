@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, OnInit, Input } from '@angular/core';
+import { Component, inject, ViewChild, OnInit, AfterViewChecked, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'
 
@@ -20,23 +20,25 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {provideNativeDateAdapter} from '@angular/material/core';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 //Imports for Reactive Forms
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormGroupDirective, FormControl } from '@angular/forms';
 
 //Imports for RXJS
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {merge, finalize} from 'rxjs';
+import {merge, debounceTime} from 'rxjs';
+import { VehicleService } from '../../../shared/services/vehicle.service';
 
 @Component({
   selector: 'app-quote-form',
   standalone: true,
   providers: [provideNativeDateAdapter()],
-  imports: [MatSlideToggleModule, MatDatepickerModule, MatInputModule, MatFormFieldModule, MatCardModule, MatSelectModule, MatCheckboxModule, ReactiveFormsModule, AlertModalComponent, CommonModule],
+  imports: [MatSlideToggleModule, MatDatepickerModule, MatInputModule, MatFormFieldModule, MatCardModule, MatSelectModule, MatCheckboxModule, MatAutocompleteModule, ReactiveFormsModule, AlertModalComponent, CommonModule],
   templateUrl: './quote-form.component.html',
   styleUrl: './quote-form.component.css'
 })
-export class QuoteFormComponent implements OnInit {
+export class QuoteFormComponent implements OnInit, AfterViewChecked {
 
   //OTHER VARIABLES
   private generalServiceService = inject(GeneralServiceService);
@@ -59,6 +61,16 @@ export class QuoteFormComponent implements OnInit {
 
   //VARIABLES FOR SEARCH VEHICLE'S QUOTES
   vehiclePlateDos = new FormControl('', [Validators.required]);
+  filteredOptions!:string[];
+  initForm(){
+    this.vehiclePlateDos.valueChanges
+    .pipe(debounceTime(1500))
+    .subscribe(response => {
+      console.log('entered data is ', response);
+      this.searchPlateOfVehicles();
+    })
+
+  }
 
   //VARIABLES FOR UPDATE USER
   @Input() quoteData?: Quote | undefined;
@@ -76,6 +88,13 @@ export class QuoteFormComponent implements OnInit {
     merge(observable3 as any, observable2 as any)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateErrorMessage());
+  }
+
+  ngAfterViewChecked(): void {
+    if(this.renderOption() === 9){
+      this.initForm();
+      //this.renderOption.set(31);
+    }
   }
 
   ngOnInit(): void {
@@ -195,6 +214,19 @@ export class QuoteFormComponent implements OnInit {
     this.router.navigate(['dashboard/vehicle-quotes',this.vehiclePlateDos.value])
       .catch(error => {
         this.alertMessage = error.error.message;
+      })
+  }
+
+  //SERVICE METHOD FOR SEARCH CUSTOMER NAMES
+  private vehicleService = inject(VehicleService);
+
+  searchPlateOfVehicles(){
+    this.vehicleService.searchPlateOfVehicles(this.vehiclePlateDos.value)
+      .subscribe({
+        next: response => {
+          console.log(response.vl)
+          this.filteredOptions = response.vl;
+        }
       })
   }
 

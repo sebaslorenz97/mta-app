@@ -57,6 +57,14 @@ export class VehicleService {
     })
   }
 
+  searchPlateOfVehicles(vehiclePlateDos: string | null){
+    return this.httpClient.get<Response>(`${this.apiUrl}/getvehiclesbystringplate/${vehiclePlateDos}`,{
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+    })
+  }
+
   //DATA SHARED BETWEEN COMPONENTS
   vehicleData = signal<Vehicle[]>([]);
 

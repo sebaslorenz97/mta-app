@@ -1,5 +1,5 @@
 <div class="accordion .accordion-flush" id="accordionExample">
-  <div class="accordion-item bg-primary border-0">
+  <div class="accordion-item bg-primary border-0" *ngIf="this.isAdmin === '1'">
     <h2 class="accordion-header" id="headingOne">
       <button class="accordion-button bg-primary text-white text-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
         USUARIOS Y ROLES
@@ -9,7 +9,7 @@
       <div class="accordion-body px-0 py-0">
         <ul class="nav bg-primary flex-column">
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionCreateUserRoles()" routerLink="/dashboard/user-and-roles">Crear Usuario & Asignar Roles</a>
+            <a class="navigate nav-link text-white fs-6" (click)="changeRenderOptionCreateUserRoles()" routerLink="/dashboard/user-and-roles">Crear Usuario & Asignar Roles</a>
           </li>
           <li class="nav-item">
             <a class="navigate nav-link text-white" (click)="changeRenderOptionSearchUserByName()" routerLink="/dashboard/user-and-roles">Consultar Usuario por Usuario</a>
@@ -50,7 +50,7 @@
       <div class="accordion-body">
         <ul class="nav bg-primary flex-column">
           <li class="nav-item">
-            <a class="navigate nav-link text-white" (click)="changeRenderOptionCreateVehicle()" routerLink="/dashboard/vehicle">Crear Vehiculo</a>
+            <a class="navigate nav-link text-white" (click)="searchVehiclesByCustomer()">Crear Vehiculo</a>
           </li>
           <li class="nav-item">
             <a class="navigate nav-link text-white" (click)="changeRenderOptionSearchVehicleByPlate()" routerLink="/dashboard/vehicle">Consultar Vehiculo por placa</a>
@@ -84,4 +84,26 @@
       </div>
     </div>
   </div>
+  <div class="accordion-item bg-primary border-0">
+    <h2 class="accordion-header" id="headingFive">
+      <button class="accordion-button collapsed bg-primary text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+        CATALOGOS
+      </button>
+    </h2>
+    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <ul class="nav bg-primary flex-column">
+          <li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionCreateVehicleCatalog()" routerLink="/dashboard/vehicle-catalogs">Crear Catalogos para Vehiculos</a>
+          </li>
+          <!--<li class="nav-item">
+            <a class="navigate nav-link text-white" (click)="changeRenderOptionSearchVehicleCatalog()" routerLink="/dashboard/vehicle-catalogs">Buscar Catalogos para Vehiculos</a>
+          </li>-->
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- ALERT MESSAGE -->
+<app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>

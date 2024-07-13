@@ -5,13 +5,14 @@ import { QuoteDetailsService } from '../../../shared/services/quote-details.serv
 import { Quote } from '../../../shared/models/model'
 
 //IMPORTS FOR ANGULAR MATERIAL
+import {MatCardModule} from '@angular/material/card';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 
 @Component({
   selector: 'app-vehicle-quotes-dashboard',
   standalone: true,
-  imports: [MatTableModule, MatPaginatorModule, RouterOutlet],
+  imports: [MatTableModule, MatPaginatorModule, MatCardModule, RouterOutlet],
   templateUrl: './vehicle-quotes-dashboard.component.html',
   styleUrl: './vehicle-quotes-dashboard.component.css'
 })
@@ -25,6 +26,7 @@ export class VehicleQuotesDashboardComponent implements AfterViewInit, OnInit{
   dataSource!: MatTableDataSource<QuoteForTable>;
   clickedRows = new Set<QuoteForTable>();
   alertMessage: string | null = null;
+  vehicle!: string;
 
   constructor(private route: ActivatedRoute, private router: Router) { }
 
@@ -35,6 +37,7 @@ export class VehicleQuotesDashboardComponent implements AfterViewInit, OnInit{
   }
 
   ngOnInit(): void {
+    this.vehicle = this.route.snapshot.data['vehicleQuotes'].vehicle;
     this.quoteData = this.route.snapshot.data['vehicleQuotes'].lqb;
     this.filteredQuoteData = this.quoteData.map(({
       quoteId,quoteOrderDate, quoteDeadline, quoteStatusVehicle, quotePaymentMethod, quotePaymentStatus, quoteRequireInvoice, quoteAdvancePayment

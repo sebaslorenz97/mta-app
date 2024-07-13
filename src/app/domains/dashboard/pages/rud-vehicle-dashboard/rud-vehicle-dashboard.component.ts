@@ -20,6 +20,9 @@ export class RudVehicleDashboardComponent implements OnInit{
   private generalServiceService = inject(GeneralServiceService);
   renderOption = this.generalServiceService.renderOption;
 
+  lines!: string[];
+  models!: string[];
+  years!: string[];
   vehicleData!: Vehicle;
 
   constructor(private route: ActivatedRoute) {
@@ -27,10 +30,16 @@ export class RudVehicleDashboardComponent implements OnInit{
 
   ngOnInit(): void {
     this.renderOption.set(15);
-    console.log(this.route.snapshot.data['vehicle']);
     this.vehicleData = this.route.snapshot.data['vehicle'].vb;
+    this.lines = this.route.snapshot.data['linesModelsAndYears'].lines;
+    this.models = this.route.snapshot.data['linesModelsAndYears'].models;
+    this.years = this.route.snapshot.data['linesModelsAndYears'].years;
     console.log('---------------- Vehicle Data ----------------');
     console.log(this.vehicleData);
+    console.log('------- Lines, Models, and Years Data --------')
+    console.log(this.lines)
+    console.log(this.models)
+    console.log(this.years)
   }
 
 }

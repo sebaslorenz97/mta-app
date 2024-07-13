@@ -1,0 +1,26 @@
+.mat-mdc-form-field {
+  --mdc-filled-text-field-caret-color: #1356dd;
+  --mdc-filled-text-field-focus-active-indicator-color: #3a9ae4;
+  --mdc-filled-text-field-focus-label-text-color: #1356dd;
+}
+
+.mat-mdc-checkbox{
+  --mdc-checkbox-selected-focus-icon-color: #6f9dd8;
+  --mdc-checkbox-selected-focus-state-layer-color: #6f9dd8;
+  --mdc-checkbox-selected-hover-icon-color: #275cbd;
+  --mdc-checkbox-selected-icon-color: #275cbd;
+
+  --mdc-checkbox-selected-pressed-icon-color: #1356dd;
+  --mdc-checkbox-selected-pressed-state-layer-color: #1356dd;
+}
+
+.form{
+  width: 100%;
+  height: 100%;
+}
+
+.form-elements{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

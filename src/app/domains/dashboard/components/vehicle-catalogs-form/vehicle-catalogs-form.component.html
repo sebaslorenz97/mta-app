@@ -1,0 +1,126 @@
+<!-- FORM FOR CREATE OR UPDATE OR DELETE A CUSTOMER -->
+<div *ngIf="renderOption() == 12 || renderOption() == 14">
+  <div class="row">
+
+    <div class="col-4">
+      <form [formGroup]="formGroupForLine" (ngSubmit)="addLine($event)">
+        <mat-card class="form">
+          <mat-card-content class="container">
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Marca</mat-label>
+                  <input type="text" matInput formControlName="vehicleLine">
+                   @if (this.vehicleLine!.invalid) {
+                   <mat-error>{{errorMessage1}}</mat-error>
+                   }
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row" *ngIf="renderOption() == 14">
+              <div class="col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Marca Actualizada</mat-label>
+                  <input type="text" matInput formControlName="newVehicleLine">
+                   @if (this.newVehicleLine!.invalid) {
+                   <mat-error>{{errorMessage5}}</mat-error>
+                   }
+                </mat-form-field>
+              </div>
+            </div>
+            <button *ngIf="renderOption() == 12" [disabled]="formGroupForLine.invalid" type="submit" class="btn btn-success">Añadir Marca</button>
+            <button *ngIf="renderOption() == 14" [disabled]="formGroupForLine.invalid" type="button" class="btn btn-warning">Actualizar Marca</button>
+            <button *ngIf="renderOption() == 14" type="button" class="btn btn-danger">Eliminar Marca</button>
+          </mat-card-content>
+        </mat-card>
+      </form>
+    </div>
+
+    <div class="col-4">
+      <form [formGroup]="formGroupForModel" (ngSubmit)="addModel($event)">
+        <mat-card class="form">
+          <mat-card-content class="container">
+            <div class="row">
+              <div class="col-5">
+                <mat-form-field>
+                  <mat-label>Marca:</mat-label>
+                  <mat-select formControlName="vehicleLineNameFk">
+                    <mat-option value="Nissan">Nissan</mat-option>
+                    <mat-option value="BMW">BMW</mat-option>
+                    <mat-option value="Chevrolet">Chevrolet</mat-option>
+                  </mat-select>
+                  @if (this.vehicleLineNameFk!.invalid) {
+                    <mat-error>{{errorMessage2}}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Modelo</mat-label>
+                  <input type="email" matInput formControlName="vehicleModel">
+                  @if (this.vehicleModel!.invalid) {
+                    <mat-error>{{errorMessage3}}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row" *ngIf="renderOption() == 14">
+              <div class="col-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Modelo Actualizado</mat-label>
+                  <input type="email" matInput formControlName="newVehicleModel">
+                  @if (this.newVehicleModel!.invalid) {
+                    <mat-error>{{errorMessage6}}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+            <button *ngIf="renderOption() == 12" [disabled]="formGroupForModel.invalid" type="submit" class="btn btn-success">Añadir Modelo</button>
+            <button *ngIf="renderOption() == 14" [disabled]="formGroupForModel.invalid" type="button"  class="btn btn-warning">Actualizar Modelo</button>
+            <button *ngIf="renderOption() == 14" [disabled]="formGroupForModel.invalid" type="button"  class="btn btn-danger">Eliminar Modelo</button>
+          </mat-card-content>
+        </mat-card>
+      </form>
+    </div>
+
+    <div class="col-4">
+      <form [formGroup]="formGroupForYear" (ngSubmit)="addYear($event)">
+        <mat-card class="form">
+          <mat-card-content class="container">
+            <div class="row">
+              <div class="col-12">
+                <mat-form-field>
+                  <mat-label>Año</mat-label>
+                  <input type="number" matInput formControlName="vehicleYearValue">
+                  @if (this.vehicleYearValue!.invalid) {
+                    <mat-error>{{errorMessage4}}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row" *ngIf="renderOption() == 14">
+              <div class="col-12">
+                <mat-form-field>
+                  <mat-label>Año Actualizado</mat-label>
+                  <input type="number" matInput formControlName="newVehicleYearValue">
+                  @if (this.newVehicleYearValue!.invalid) {
+                    <mat-error>{{errorMessage7}}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </div>
+            <button *ngIf="renderOption() == 12" [disabled]="formGroupForYear.invalid" type="submit" class="btn btn-success">Crear Año</button>
+            <button *ngIf="renderOption() == 14" [disabled]="formGroupForYear.invalid" type="button" class="btn btn-warning">Actualizar Año</button>
+            <button *ngIf="renderOption() == 14" type="button"  class="btn btn-danger">Eliminar Año</button>
+          </mat-card-content>
+        </mat-card>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<!-- ALERT MESSAGE -->
+<app-alert-modal [error]="alertMessage" *ngIf="alertMessage!=null" (close)="alertMessage=null"></app-alert-modal>

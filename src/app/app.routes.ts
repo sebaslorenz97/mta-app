@@ -18,12 +18,13 @@ import { RudCustomerDashboardComponent } from '../app/domains/dashboard/pages/ru
 import { RudVehicleDashboardComponent } from '../app/domains/dashboard/pages/rud-vehicle-dashboard/rud-vehicle-dashboard.component'
 import { RudQuoteAndDetailsDashboardComponent } from '../app/domains/dashboard/pages/rud-quote-and-details-dashboard/rud-quote-and-details-dashboard.component'
 import { ProfileFormComponent } from '../app/domains/dashboard/components/profile-form/profile-form.component'
+import { VehicleCatalogsDashboardComponent } from '../app/domains/dashboard/pages/vehicle-catalogs-dashboard/vehicle-catalogs-dashboard.component'
 
 //IMPORTS FOR GUARDS
 import { authGuard } from '././domains/shared/guards/auth.guard'
 import { redirectGuard } from '././domains/shared/guards/redirect.guard'
 //IMPORTS FOR RESOLVERS
-import { vehicleResolverForSearchCustomerVehicles, vehicleResolverForSearchVehicleByPlate } from './domains/shared/resolvers/vehicle.resolver'
+import { vehicleResolverForSearchCustomerVehicles, vehicleResolverForSearchVehicleByPlate, vehicleResolverForSearchVehicleLinesModelsAndYears } from './domains/shared/resolvers/vehicle.resolver'
 import { quoteResolver } from './domains/shared/resolvers/quote.resolver'
 import { quoteDetailResolver } from './domains/shared/resolvers/quote-detail.resolver'
 import { userAndRolesResolverByUsername, userAndRolesResolverByMecId, userAndRolesResolverForAccountOwner } from './domains/shared/resolvers/user-and-roles.resolver'
@@ -53,6 +54,7 @@ export const routes: Routes = [
     canActivate: [ authGuard ],
     component: DashboardLayoutComponent,
     children: [
+      //PROFILE ROUTES
       {
         path: 'profile-info',
         //canActivate: [ authGuard ],
@@ -71,6 +73,9 @@ export const routes: Routes = [
         //canActivate: [ authGuard ],
         component: ProfileFormComponent
       },
+
+
+      //ROUTES FOR CREATE
       {
         path: 'user-and-roles',
         //canActivate: [ authGuard ],
@@ -87,34 +92,26 @@ export const routes: Routes = [
         component: VehicleDashboardComponent,
       },
       {
+        path: 'vehicle-lmy',
+        //canActivate: [ redirectGuard ],
+        component: VehicleDashboardComponent,
+        resolve: {
+          linesModelsAndYears: vehicleResolverForSearchVehicleLinesModelsAndYears
+        }
+      },
+      {
         path: 'quote-and-details',
         //canActivate: [ authGuard ],
         component: QuoteAndDetailsDashboardComponent
       },
       {
-        path: 'customer-vehicles/:customerName',
+        path: 'vehicle-catalogs',
         //canActivate: [ redirectGuard ],
-        component: CustomerVehiclesDashboardComponent,
-        resolve: {
-          customerVehicles: vehicleResolverForSearchCustomerVehicles
-        }
+        component: VehicleCatalogsDashboardComponent
       },
-      {
-        path: 'vehicle-quotes/:vehiclePlateDos',
-        //canActivate: [ redirectGuard ],
-        component: VehicleQuotesDashboardComponent,
-        resolve: {
-          vehicleQuotes: quoteResolver
-        }
-      },
-      {
-        path: 'quote-details/:quoteId',
-        //canActivate: [ redirectGuard ],
-        component: QuoteDetailsDashboardComponent,
-        resolve: {
-          quoteDetails: quoteDetailResolver
-        }
-      },
+
+
+      //ROUTES FOR READ, UPDATE AND DELETE
       {
         path: 'rud-user-and-roles/by-username/:userPkDos',
         //canActivate: [ redirectGuard ],
@@ -144,7 +141,8 @@ export const routes: Routes = [
         //canActivate: [ redirectGuard ],
         component: RudVehicleDashboardComponent,
         resolve: {
-          vehicle: vehicleResolverForSearchVehicleByPlate
+          vehicle: vehicleResolverForSearchVehicleByPlate,
+          linesModelsAndYears: vehicleResolverForSearchVehicleLinesModelsAndYears
         }
       },
       {
@@ -153,6 +151,33 @@ export const routes: Routes = [
         component: RudQuoteAndDetailsDashboardComponent,
         resolve: {
           quoteAndDetails: quoteAndDetailsResolver
+        }
+      },
+
+
+      //ROUTES FOR JOINS
+      {
+        path: 'customer-vehicles/:customerName',
+        //canActivate: [ redirectGuard ],
+        component: CustomerVehiclesDashboardComponent,
+        resolve: {
+          customerVehicles: vehicleResolverForSearchCustomerVehicles
+        }
+      },
+      {
+        path: 'vehicle-quotes/:vehiclePlateDos',
+        //canActivate: [ redirectGuard ],
+        component: VehicleQuotesDashboardComponent,
+        resolve: {
+          vehicleQuotes: quoteResolver
+        }
+      },
+      {
+        path: 'quote-details/:quoteId',
+        //canActivate: [ redirectGuard ],
+        component: QuoteDetailsDashboardComponent,
+        resolve: {
+          quoteDetails: quoteDetailResolver
         }
       }
     ]

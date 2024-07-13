@@ -14,9 +14,13 @@ export interface Response{
     lqb: Quote[]
     ub: User;
     urb: UserRole;
-    roles: string;
+    roles: string[];
     roleAssignmentOperationResult: string;
-    rolesFromAuthentication: string[];
+    cl: string[];
+    vl: string[];
+    lines: string[];
+    models: string[];
+    years: string[];
 }
 
 export interface Login{
@@ -110,4 +114,17 @@ export interface QuoteDetail{
 export interface QuoteDetailsCUD{
   lqdb: QuoteDetail[],
   lqdbForDelete: number[]
+}
+
+export interface CreateVehicleLine{
+  vehicleLine: string;
+}
+
+export interface CreateVehicleModel{
+  vehicleModel: string;
+  vehicleLineNameFk: string;
+}
+
+export interface CreateVehicleYear{
+  vehicleYearValue: string;
 }

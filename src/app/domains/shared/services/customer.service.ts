@@ -48,4 +48,12 @@ export class CustomerService {
     })
   }
 
+  searchNameOfCustomers(customerNameDos: string | null){
+    return this.httpClient.get<Response>(`${this.apiUrl}/getcustomersbystringname/${customerNameDos}`,{
+      headers: {
+        Authorization: `Bearer ${this.tokenService.getToken()}`
+      }
+    })
+  }
+
 }
